@@ -61,6 +61,17 @@
   --gradient-brand-bright: linear-gradient(135deg, #0e4d5c, #1a7a8c);
 }
 
+@keyframes heroIn {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 * {
   box-sizing: border-box;
 }

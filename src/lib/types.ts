@@ -1,32 +1,31 @@
 /* ============================================================
    Domain types — Akwaba Immo
+   Field model mirrors the maquette (design-reference/Akwaba Immo.dc.html).
    ============================================================ */
 
-export type TransactionType = "vente" | "location";
+export type Transaction = "vente" | "location";
 
-export type PropertyKind =
-  | "appartement"
-  | "maison"
-  | "villa"
-  | "studio"
-  | "terrain"
-  | "bureau"
-  | "commerce";
+export type PropertyStatus = "publie" | "reserve" | "vendu" | "loue";
 
 export interface Property {
   id: string;
   title: string;
-  kind: PropertyKind;
-  transaction: TransactionType;
-  /** Price in FCFA. For locations, this is the monthly rent. */
+  /** Display label of the property type, e.g. "Maison", "Appartement", "Terrain". */
+  type: string;
+  transaction: Transaction;
+  /** Price in FCFA (XAF). For locations this is the monthly rent. */
   price: number;
   city: string;
   neighborhood: string;
-  bedrooms?: number;
-  bathrooms?: number;
+  /** Number of rooms ("pièces"); null for terrains / commercial lots. */
+  pieces: number | null;
   /** Surface area in m². */
-  area: number;
-  images: string[];
+  surface: number;
+  status: PropertyStatus;
+  /** Gradient used for the photo panel in the maquette. */
+  gradient: string;
+  /** Watermark letter shown on the photo panel. */
+  letter: string;
   lat: number;
   lng: number;
   verified: boolean;

@@ -1,11 +1,13 @@
-import { ScreenPlaceholder } from "@/components/dev/ScreenPlaceholder";
+import { Hero } from "@/components/home/Hero";
+import { FeaturedSection } from "@/components/home/FeaturedSection";
+import { ValuesSection } from "@/components/home/ValuesSection";
 
 export default function AccueilPage() {
   return (
-    <ScreenPlaceholder
-      screen={1}
-      title="Accueil"
-      description="Hero, recherche rapide, annonces à la une et acteurs vérifiés."
-    />
+    <>
+      <Hero />
+      <FeaturedSection />
+      <ValuesSection />
+    </>
   );
 }
