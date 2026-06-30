@@ -1,53 +1,59 @@
-# Akwaba Immo
+# 🏡 Akwaba Immo
 
-Plateforme immobilière du Cameroun — achat, location et annuaire des acteurs de
-l'immobilier. Implémentation fidèle de la maquette de design
-(`design-reference/Akwaba Immo.dc.html`).
+> *Akwaba*, c'est « bienvenue ». Et c'est exactement l'idée : rendre la recherche
+> d'un logement au Cameroun simple, claire et sans mauvaises surprises.
 
-## Stack
+Trouver une maison à Yaoundé, un appartement à Douala ou un terrain à Kribi, ça
+veut souvent dire courir après des annonces douteuses, des prix flous et des
+intermédiaires qu'on ne connaît pas. **Akwaba Immo** rassemble tout au même
+endroit : des biens vérifiés, des agents certifiés, et même un annuaire des
+acteurs sérieux de l'immobilier camerounais.
 
-- **Next.js 16** (App Router) + **React 19** + **TypeScript**
-- **Tailwind CSS v4** (tokens de design dans `src/app/globals.css`)
-- **Leaflet** (cartes, tuiles CARTO) + **lucide-react** (icônes)
-- Police **Plus Jakarta Sans** via `next/font`
+## ✨ Ce qu'on peut faire
 
-## Démarrer
+- **Chercher un bien** sur une carte interactive, par ville, quartier ou rayon
+- **Consulter une annonce** en détail : photos, caractéristiques, prix au m², agent
+- **Se connecter / créer un compte** (acheteur, ou propriétaire / agent)
+- **Gérer ses biens** depuis un tableau de bord : visites, offres, statistiques
+- **Découvrir les acteurs** du secteur (institutions, banques, ordres professionnels)
+- **Comprendre les métiers** de l'immobilier : missions, salaires en FCFA, formations
+
+## 🚀 Lancer le projet
 
 ```bash
 npm install
-npm run dev      # http://localhost:3000
-npm run build    # build de production
+npm run dev
 ```
 
-## Écrans (8)
+Puis ouvre **http://localhost:3000**. C'est tout 🙂
 
-| Route | Écran |
-|-------|-------|
-| `/` | Accueil — hero + recherche, biens en vedette, atouts |
-| `/recherche` | Résultats — filtres, liste + carte Leaflet synchronisées |
-| `/annonces/[id]` | Fiche détaillée — galerie, caractéristiques, carte, agent |
-| `/connexion` | Connexion |
-| `/inscription` | Inscription (profil acheteur / agent) |
-| `/tableau-de-bord` | Tableau de bord agent — KPIs, biens, visites, offres |
-| `/annuaire` | Annuaire des acteurs (institutions publiques/privées/pro) |
-| `/metiers` | Métiers de l'immobilier (8 fiches, 5 familles) |
+## 🧰 Sous le capot
 
-## Structure
+Rien d'exotique, des outils modernes et solides :
 
-```
-src/
-├─ app/                  # routes (App Router)
-│  ├─ (site)/            # pages avec Header + Footer
-│  ├─ (auth)/            # connexion / inscription
-│  ├─ recherche/         # recherche plein écran (carte)
-│  └─ tableau-de-bord/   # espace agent (sidebar)
-├─ components/           # ui, layout, home, property, search, auth, dashboard, directory
-└─ lib/
-   ├─ types.ts           # types du domaine
-   ├─ utils.ts           # helpers (prix, statuts, dates…)
-   ├─ geo.ts             # villes, distances, recherche
-   └─ mock/              # données fictives (frontend-first)
-```
+- **Next.js 16** + **React 19** + **TypeScript**
+- **Tailwind CSS v4** pour le style
+- **Leaflet** pour les cartes
+- Police **Plus Jakarta Sans**
 
-> Les données sont des **mocks** (`src/lib/mock/`). Le backend (API, auth, base de
-> données) sera branché dans une étape ultérieure.
+## 🗺️ Les écrans
+
+| Page | À quoi ça sert |
+|------|----------------|
+| Accueil | La vitrine : recherche + biens en vedette |
+| Recherche | Résultats avec liste + carte côte à côte |
+| Fiche d'un bien | Tous les détails d'une annonce |
+| Connexion / Inscription | Entrer dans son espace |
+| Tableau de bord | L'espace de l'agent : biens, visites, offres |
+| Annuaire | Les acteurs de l'immobilier camerounais |
+| Métiers | Les métiers du secteur, expliqués |
+
+## 📌 Bon à savoir
+
+Pour l'instant, les données sont **fictives** (des exemples réalistes pour donner
+vie aux écrans). La prochaine étape, c'est de brancher un vrai serveur : base de
+données, comptes, vraies annonces.
+
+---
+
+*Fait avec ❤️ pour le Cameroun 🇨🇲*
