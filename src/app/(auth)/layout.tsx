@@ -1,3 +1,5 @@
+import Link from "next/link";
+import { ArrowLeft } from "lucide-react";
 import { Logo } from "@/components/layout/Logo";
 
 export default function AuthLayout({
@@ -6,28 +8,18 @@ export default function AuthLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="grid min-h-screen lg:grid-cols-2">
-      {/* Brand panel */}
-      <div
-        className="relative hidden flex-col justify-between p-12 text-white lg:flex"
-        style={{ background: "var(--gradient-brand)" }}
-      >
-        <Logo light />
-        <div>
-          <h2 className="max-w-sm text-3xl font-extrabold leading-tight">
-            La plateforme immobilière du Cameroun
-          </h2>
-          <p className="mt-4 max-w-sm text-white/70">
-            Annonces vérifiées, agents certifiés et acteurs de confiance.
-          </p>
-        </div>
-        <p className="text-sm text-white/50">© {new Date().getFullYear()} Akwaba Immo</p>
-      </div>
-
-      {/* Form panel */}
-      <div className="flex items-center justify-center p-6 sm:p-12">
-        <div className="w-full max-w-md">{children}</div>
-      </div>
+    <div className="flex min-h-screen flex-col bg-white">
+      <header className="flex h-16 shrink-0 items-center justify-between border-b border-line px-6 sm:px-10">
+        <Logo size={32} />
+        <Link
+          href="/"
+          className="flex items-center gap-1.5 text-[13px] font-medium text-muted transition-colors hover:text-brand-500"
+        >
+          <ArrowLeft className="size-3.5" />
+          Retour au site
+        </Link>
+      </header>
+      <main className="flex-1">{children}</main>
     </div>
   );
 }
