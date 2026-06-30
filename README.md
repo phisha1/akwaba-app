@@ -1,7 +1,7 @@
 # Akwaba Immo
 
 Plateforme immobilière du Cameroun — achat, location et annuaire des acteurs de
-l'immobilier. Implémentation fidèle de la maquette Claude Design
+l'immobilier. Implémentation fidèle de la maquette de design
 (`design-reference/Akwaba Immo.dc.html`).
 
 ## Stack
