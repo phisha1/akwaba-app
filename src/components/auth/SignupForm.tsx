@@ -4,8 +4,13 @@ import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { User, Briefcase, Check, Eye, EyeOff } from "lucide-react";
+import {
+  dashboardPathForRole,
+  saveDemoUser,
+  type DemoRole,
+} from "@/lib/demo-store";
 
-type Role = "acheteur" | "agent";
+type Role = Extract<DemoRole, "lecteur" | "auteur" | "expert" | "agent">;
 
 const ROLES: {
   value: Role;
@@ -14,10 +19,22 @@ const ROLES: {
   desc: string;
 }[] = [
   {
-    value: "acheteur",
+    value: "lecteur",
     icon: User,
-    title: "Acheteur / Locataire",
-    desc: "Je cherche un bien à acheter ou à louer.",
+    title: "Lecteur",
+    desc: "Je cherche, j'apprends et je participe au forum.",
+  },
+  {
+    value: "auteur",
+    icon: User,
+    title: "Auteur",
+    desc: "Je rédige des articles et guides immobiliers.",
+  },
+  {
+    value: "expert",
+    icon: Briefcase,
+    title: "Expert",
+    desc: "Je crée des formations et réponds à la communauté.",
   },
   {
     value: "agent",
@@ -32,13 +49,21 @@ const inputClass =
 
 export function SignupForm() {
   const router = useRouter();
-  const [role, setRole] = useState<Role>("agent");
+  const [role, setRole] = useState<Role>("lecteur");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
   const [showPwd, setShowPwd] = useState(false);
   const [accepted, setAccepted] = useState(false);
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    router.push("/tableau-de-bord");
+    saveDemoUser({
+      name: `${firstName || "Utilisateur"} ${lastName}`.trim(),
+      email: email || "demo@akwaba.cm",
+      role,
+    });
+    router.push(dashboardPathForRole(role));
   }
 
   return (
@@ -94,10 +119,22 @@ export function SignupForm() {
       {/* Name */}
       <div className="mb-3.5 grid grid-cols-2 gap-3">
         <Field label="Prénom">
-          <input className={inputClass} autoComplete="given-name" required />
+          <input
+            className={inputClass}
+            value={firstName}
+            onChange={(e) => setFirstName(e.target.value)}
+            autoComplete="given-name"
+            required
+          />
         </Field>
         <Field label="Nom de famille">
-          <input className={inputClass} autoComplete="family-name" required />
+          <input
+            className={inputClass}
+            value={lastName}
+            onChange={(e) => setLastName(e.target.value)}
+            autoComplete="family-name"
+            required
+          />
         </Field>
       </div>
 
@@ -105,6 +142,8 @@ export function SignupForm() {
         <input
           type="email"
           className={inputClass}
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
           placeholder="vous@exemple.com"
           autoComplete="email"
           required

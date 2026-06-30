@@ -46,7 +46,7 @@ export default function TableauDeBordPage() {
           </p>
         </div>
         <Link
-          href="#"
+          href="/tableau-de-bord/biens/nouveau"
           className="flex items-center gap-2 rounded-[10px] bg-gold-400 px-5 py-2.5 text-sm font-bold text-white shadow-[0_3px_10px_rgba(224,163,62,0.3)] transition-colors hover:bg-gold-500"
         >
           <PlusSquare className="size-4" />

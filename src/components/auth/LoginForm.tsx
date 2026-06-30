@@ -4,14 +4,29 @@ import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Mail, Lock, Eye, EyeOff } from "lucide-react";
+import {
+  ROLE_LABEL,
+  dashboardPathForRole,
+  saveDemoUser,
+  type DemoRole,
+} from "@/lib/demo-store";
+
+const LOGIN_ROLES: DemoRole[] = ["lecteur", "auteur", "expert", "agent", "admin"];
 
 export function LoginForm() {
   const router = useRouter();
   const [showPwd, setShowPwd] = useState(false);
+  const [email, setEmail] = useState("");
+  const [role, setRole] = useState<DemoRole>("agent");
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    router.push("/tableau-de-bord");
+    saveDemoUser({
+      name: role === "admin" ? "Admin Akwaba" : "Jean-Pierre Mbida",
+      email: email || "demo@akwaba.cm",
+      role,
+    });
+    router.push(dashboardPathForRole(role));
   }
 
   return (
@@ -23,6 +38,28 @@ export function LoginForm() {
         Connectez-vous pour accéder à votre espace.
       </p>
 
+      <div className="mb-4">
+        <span className="mb-1.5 block text-[13px] font-semibold text-ink">
+          Profil de démonstration
+        </span>
+        <div className="grid grid-cols-2 gap-2">
+          {LOGIN_ROLES.map((item) => (
+            <button
+              key={item}
+              type="button"
+              onClick={() => setRole(item)}
+              className={`rounded-[10px] border-[1.5px] px-3 py-2 text-left text-xs font-bold transition-colors ${
+                role === item
+                  ? "border-brand-500 bg-brand-50 text-brand-500"
+                  : "border-line text-muted hover:border-brand-500"
+              }`}
+            >
+              {ROLE_LABEL[item]}
+            </button>
+          ))}
+        </div>
+      </div>
+
       <label className="mb-4 block">
         <span className="mb-1.5 block text-[13px] font-semibold text-ink">
           Adresse e-mail
@@ -32,6 +69,8 @@ export function LoginForm() {
           <input
             type="email"
             required
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
             placeholder="vous@exemple.com"
             autoComplete="email"
             className="w-full rounded-[10px] border-[1.5px] border-line py-3 pl-[42px] pr-3.5 text-[15px] text-ink outline-none transition focus:border-brand-500 focus:ring-[3px] focus:ring-brand-500/10"

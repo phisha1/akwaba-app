@@ -1,13 +1,14 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import { useSearchParams } from "next/navigation";
 import { ChevronDown, MapPin, MapIcon, List } from "lucide-react";
 import { properties } from "@/lib/mock/properties";
+import { readStoredProperties } from "@/lib/demo-store";
 import { CITY_CENTERS, searchProperties } from "@/lib/geo";
-import type { Transaction } from "@/lib/types";
+import type { Property, Transaction } from "@/lib/types";
 import { CompactPropertyCard } from "@/components/property/CompactPropertyCard";
 
 const SearchMap = dynamic(
@@ -45,16 +46,29 @@ export function SearchView() {
   const [radiusKm, setRadiusKm] = useState(Number(params.get("rayon")) || 10);
   const [activeId, setActiveId] = useState<string | null>(null);
   const [mobileMap, setMobileMap] = useState(false);
+  const [localProperties, setLocalProperties] = useState<Property[]>([]);
+
+  useEffect(() => {
+    const id = window.setTimeout(() => {
+      setLocalProperties(readStoredProperties());
+    }, 0);
+    return () => window.clearTimeout(id);
+  }, []);
+
+  const allProperties = useMemo(
+    () => [...localProperties, ...properties],
+    [localProperties],
+  );
 
   const results = useMemo(
     () =>
-      searchProperties(properties, {
+      searchProperties(allProperties, {
         transaction,
         ville,
         type: type === "Tous les types" ? undefined : type,
         radiusKm,
       }),
-    [transaction, ville, type, radiusKm],
+    [allProperties, transaction, ville, type, radiusKm],
   );
 
   const center = CITY_CENTERS[ville] ?? CITY_CENTERS.Yaoundé;

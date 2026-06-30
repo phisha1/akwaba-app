@@ -7,12 +7,16 @@ import {
   User,
   LogOut,
   ShieldCheck,
+  BookOpen,
+  PenLine,
 } from "lucide-react";
 import { currentUser } from "@/lib/mock/dashboard";
 
 const NAV = [
   { icon: LayoutDashboard, label: "Tableau de bord", href: "/tableau-de-bord", active: true },
-  { icon: Home, label: "Mes biens", href: "#", badge: "5", badgeStyle: "bg-white/15 text-white" },
+  { icon: Home, label: "Publier un bien", href: "/tableau-de-bord/biens/nouveau", badge: "+", badgeStyle: "bg-white/15 text-white" },
+  { icon: BookOpen, label: "Articles", href: "/tableau-de-bord/auteur" },
+  { icon: PenLine, label: "Formations", href: "/tableau-de-bord/expert" },
   { icon: CalendarDays, label: "Visites", href: "#", badge: "3", badgeStyle: "bg-gold-400 text-white" },
   { icon: Mail, label: "Offres", href: "#", badge: "2", badgeStyle: "bg-[#4DE8A0] text-[#0a3d2a]" },
   { icon: User, label: "Mon profil", href: "#" },

@@ -10,8 +10,10 @@ import { cn } from "@/lib/utils";
 const NAV = [
   { href: "/recherche", label: "Acheter" },
   { href: "/recherche?transaction=location", label: "Louer" },
-  { href: "/annuaire", label: "Annuaire" },
-  { href: "/metiers", label: "Métiers" },
+  { href: "/articles", label: "Articles" },
+  { href: "/formations", label: "Formations" },
+  { href: "/filieres", label: "Filières" },
+  { href: "/forum", label: "Forum" },
 ];
 
 export function Header() {
@@ -26,7 +28,7 @@ export function Header() {
         <Logo />
 
         {/* Desktop nav */}
-        <nav className="hidden items-center gap-9 md:flex">
+        <nav className="hidden items-center gap-6 md:flex">
           {NAV.map((item) => (
             <Link
               key={item.label}
