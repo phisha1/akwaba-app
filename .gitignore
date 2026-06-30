@@ -42,3 +42,6 @@ next-env.d.ts
 
 # design reference (maquette source — kept locally, not part of the app)
 /design-reference/
+
+# claude tooling (kept locally, not part of the app)
+/.claude/
