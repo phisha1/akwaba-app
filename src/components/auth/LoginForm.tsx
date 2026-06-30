@@ -32,8 +32,8 @@ export function LoginForm() {
           <input
             type="email"
             required
-            defaultValue="jpierre.mbida@gmail.com"
             placeholder="vous@exemple.com"
+            autoComplete="email"
             className="w-full rounded-[10px] border-[1.5px] border-line py-3 pl-[42px] pr-3.5 text-[15px] text-ink outline-none transition focus:border-brand-500 focus:ring-[3px] focus:ring-brand-500/10"
           />
         </div>
@@ -48,8 +48,8 @@ export function LoginForm() {
           <input
             type={showPwd ? "text" : "password"}
             required
-            defaultValue="motdepasse"
             placeholder="Votre mot de passe"
+            autoComplete="current-password"
             className="w-full rounded-[10px] border-[1.5px] border-line py-3 pl-[42px] pr-[42px] text-[15px] text-ink outline-none transition focus:border-brand-500 focus:ring-[3px] focus:ring-brand-500/10"
           />
           <button
