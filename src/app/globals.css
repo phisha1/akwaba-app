@@ -1,0 +1,78 @@
+@import "tailwindcss";
+
+/* ============================================================
+   Akwaba Immo — Design tokens
+   Source: design-reference/Akwaba Immo.dc.html
+   ============================================================ */
+
+@theme {
+  /* Brand — teal */
+  --color-brand-50: #eef6f8;
+  --color-brand-100: #d6e9ee;
+  --color-brand-400: #1a7a8c;
+  --color-brand-500: #0e4d5c; /* primary */
+  --color-brand-600: #0c4454;
+  --color-brand-700: #0a3d4a;
+  --color-brand-900: #051e29; /* gradient start / darkest */
+
+  /* Brand — gold accent */
+  --color-gold-100: #fef3c7;
+  --color-gold-400: #e0a33e; /* accent */
+  --color-gold-500: #c88e30;
+  --color-gold-700: #b45309;
+
+  /* Ink / neutrals */
+  --color-ink: #1e2a30; /* primary text */
+  --color-ink-soft: #4b5563; /* secondary text */
+  --color-muted: #6b7280; /* muted text */
+  --color-faint: #9ca3af; /* placeholder */
+  --color-line: #e8e4df; /* warm divider/border */
+  --color-line-cool: #d1d5db;
+  --color-surface: #ffffff;
+  --color-surface-warm: #faf8f5;
+  --color-surface-cool: #f9fafb;
+  --color-surface-tint: #eef6f8; /* teal tint */
+
+  /* Semantic accents (badges / statuses) */
+  --color-success: #1e7a4a;
+  --color-success-bg: #e6f4ec;
+  --color-warn: #b45309;
+  --color-warn-bg: #fef3c7;
+  --color-info: #1d4ed8;
+  --color-info-bg: #dbeafe;
+  --color-violet: #6d28d9;
+  --color-violet-bg: #ede9fe;
+
+  /* Typography */
+  --font-sans: var(--font-jakarta), system-ui, sans-serif;
+
+  /* Radii */
+  --radius-card: 16px;
+  --radius-pill: 999px;
+
+  /* Shadows */
+  --shadow-card: 0 1px 4px rgba(0, 0, 0, 0.06), 0 8px 24px rgba(14, 77, 92, 0.06);
+  --shadow-pop: 0 12px 40px rgba(14, 77, 92, 0.16);
+}
+
+/* Brand gradients reused across screens */
+:root {
+  --gradient-brand: linear-gradient(135deg, #051e29 0%, #0e4d5c 55%, #0c4454 100%);
+  --gradient-brand-bright: linear-gradient(135deg, #0e4d5c, #1a7a8c);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: var(--color-surface);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
