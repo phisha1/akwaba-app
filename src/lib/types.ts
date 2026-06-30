@@ -19,8 +19,10 @@ export interface Property {
   neighborhood: string;
   /** Number of rooms ("pièces"); null for terrains / commercial lots. */
   pieces: number | null;
-  /** Surface area in m². */
+  /** Surface area in m² (habitable for buildings). */
   surface: number;
+  /** Land area in m², when distinct from the habitable surface. */
+  landArea?: number;
   status: PropertyStatus;
   /** Gradient used for the photo panel in the maquette. */
   gradient: string;
@@ -55,6 +57,7 @@ export interface Actor {
   rating: number;
   reviews: number;
   listingsCount: number;
+  experienceYears?: number;
   bio?: string;
   phone?: string;
 }

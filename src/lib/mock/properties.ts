@@ -15,6 +15,7 @@ export const properties: Property[] = [
     neighborhood: "Bastos",
     pieces: 6,
     surface: 450,
+    landArea: 800,
     status: "publie",
     gradient: "linear-gradient(145deg,#0a3d4a,#1a7a8c)",
     letter: "M",
