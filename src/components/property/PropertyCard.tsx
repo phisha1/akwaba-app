@@ -13,12 +13,18 @@ export function PropertyCard({ property }: { property: Property }) {
     >
       {/* Photo panel */}
       <div
-        className="relative flex h-56 items-end overflow-hidden"
-        style={{ background: property.gradient }}
+        className="relative flex h-56 items-end overflow-hidden bg-cover bg-center"
+        style={{
+          backgroundImage: property.imageUrl
+            ? `linear-gradient(180deg, rgba(5, 30, 41, 0.04) 0%, rgba(5, 30, 41, 0.16) 45%, rgba(5, 30, 41, 0.88) 100%), url('${property.imageUrl}')`
+            : property.gradient,
+        }}
       >
-        <span className="pointer-events-none absolute -right-4 -top-4 select-none text-[140px] font-extrabold leading-none text-white/[0.07]">
-          {property.letter}
-        </span>
+        {!property.imageUrl && (
+          <span className="pointer-events-none absolute -right-4 -top-4 select-none text-[140px] font-extrabold leading-none text-white/[0.07]">
+            {property.letter}
+          </span>
+        )}
 
         <div className="absolute left-3.5 top-3.5 z-[2] flex gap-2">
           <span className="rounded-md bg-brand-500 px-2.5 py-1 text-[11px] font-bold text-white">

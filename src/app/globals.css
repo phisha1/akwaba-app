@@ -78,10 +78,12 @@
 
 html {
   scroll-behavior: smooth;
+  overflow-x: hidden;
 }
 
 body {
   margin: 0;
+  overflow-x: hidden;
   background: var(--color-surface);
   color: var(--color-ink);
   font-family: var(--font-sans);
