@@ -62,11 +62,23 @@ export interface Actor {
   phone?: string;
 }
 
+export type ProfessionFamily =
+  | "offre"
+  | "intermediaire"
+  | "technique"
+  | "droit"
+  | "gestion";
+
 export interface Profession {
   id: string;
   title: string;
-  category: string;
-  summary: string;
+  family: ProfessionFamily;
+  emoji: string;
+  /** Short badge label shown on the card (e.g. "Technique" for the géomètre). */
+  badge: string;
+  description: string;
   missions: string[];
-  formation?: string;
+  salaryNote: string;
+  salaryRange: string;
+  formations: string[];
 }
