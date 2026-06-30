@@ -34,7 +34,7 @@ export function SignupForm() {
   const router = useRouter();
   const [role, setRole] = useState<Role>("agent");
   const [showPwd, setShowPwd] = useState(false);
-  const [accepted, setAccepted] = useState(true);
+  const [accepted, setAccepted] = useState(false);
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -94,10 +94,10 @@ export function SignupForm() {
       {/* Name */}
       <div className="mb-3.5 grid grid-cols-2 gap-3">
         <Field label="Prénom">
-          <input className={inputClass} defaultValue="Jean-Pierre" required />
+          <input className={inputClass} autoComplete="given-name" required />
         </Field>
         <Field label="Nom de famille">
-          <input className={inputClass} defaultValue="Mbida" required />
+          <input className={inputClass} autoComplete="family-name" required />
         </Field>
       </div>
 
@@ -105,7 +105,8 @@ export function SignupForm() {
         <input
           type="email"
           className={inputClass}
-          defaultValue="jpierre.mbida@gmail.com"
+          placeholder="vous@exemple.com"
+          autoComplete="email"
           required
         />
       </Field>
@@ -118,6 +119,7 @@ export function SignupForm() {
           <input
             className="flex-1 bg-transparent text-sm text-ink outline-none"
             placeholder="6 99 45 23 17"
+            autoComplete="tel"
             required
           />
         </div>
@@ -129,6 +131,7 @@ export function SignupForm() {
             type={showPwd ? "text" : "password"}
             className={`${inputClass} pr-10`}
             placeholder="Créez un mot de passe sécurisé"
+            autoComplete="new-password"
             required
           />
           <button

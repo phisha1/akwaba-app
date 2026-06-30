@@ -24,6 +24,12 @@ export interface Property {
   /** Land area in m², when distinct from the habitable surface. */
   landArea?: number;
   status: PropertyStatus;
+  /** Id of the owner managing this listing (the logged-in agent owns "me"). */
+  ownerId?: string;
+  /** Number of views (shown in the agent dashboard). */
+  views?: number;
+  /** Public URL of the listing photo used in cards and galleries. */
+  imageUrl?: string;
   /** Gradient used for the photo panel in the maquette. */
   gradient: string;
   /** Watermark letter shown on the photo panel. */
@@ -35,6 +41,22 @@ export interface Property {
   agentId: string;
   description?: string;
   amenities?: string[];
+  createdAt: string;
+}
+
+export type VisitStatus = "attente" | "confirmee" | "refusee";
+
+/** A visit request left by a visitor on a listing, seen by the agent. */
+export interface Visit {
+  id: string;
+  propertyId: string;
+  propertyTitle: string;
+  visitorName: string;
+  phone: string;
+  email?: string;
+  preferredDate?: string;
+  message?: string;
+  status: VisitStatus;
   createdAt: string;
 }
 

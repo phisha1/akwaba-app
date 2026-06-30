@@ -22,7 +22,7 @@ export function Header() {
 
   return (
     <header className="sticky top-0 z-50 border-b border-line bg-white/95 backdrop-blur">
-      <div className="mx-auto flex h-16 max-w-[1440px] items-center justify-between px-4 sm:px-10 md:h-[70px] lg:px-14">
+      <div className="mx-auto flex h-16 w-full max-w-[1440px] items-center justify-between px-4 sm:px-10 md:h-[70px] lg:px-14">
         <Logo />
 
         {/* Desktop nav */}
@@ -61,12 +61,6 @@ export function Header() {
 
         {/* Mobile actions */}
         <div className="flex items-center gap-1.5 md:hidden">
-          <Link
-            href="/connexion"
-            className="px-2.5 py-1.5 text-[13px] font-semibold text-brand-500"
-          >
-            Connexion
-          </Link>
           <button
             type="button"
             onClick={() => setOpen((v) => !v)}
@@ -82,6 +76,13 @@ export function Header() {
       {/* Mobile menu panel */}
       {open && (
         <nav className="flex flex-col border-t border-line bg-white px-4 pb-4 pt-1 md:hidden">
+          <Link
+            href="/connexion"
+            onClick={() => setOpen(false)}
+            className="border-b border-line/60 py-3 text-sm font-medium text-brand-500"
+          >
+            Connexion
+          </Link>
           {NAV.map((item) => (
             <Link
               key={item.label}

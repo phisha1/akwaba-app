@@ -7,14 +7,14 @@ export function FeaturedSection() {
   const items = featuredProperties.slice(0, 3);
 
   return (
-    <section className="bg-surface-warm px-6 py-[72px] sm:px-10 lg:px-14">
+    <section className="bg-surface-warm px-4 py-[60px] sm:px-10 sm:py-[72px] lg:px-14">
       <div className="mx-auto max-w-[1440px]">
-        <div className="mb-10 flex items-end justify-between gap-4">
-          <div>
+        <div className="mb-8 flex flex-col items-start gap-4 sm:mb-10 sm:flex-row sm:items-end sm:justify-between">
+          <div className="min-w-0">
             <div className="mb-2 text-xs font-bold uppercase tracking-[1.2px] text-gold-400">
               À la une
             </div>
-            <h2 className="text-3xl font-extrabold tracking-[-0.8px] text-ink sm:text-[34px]">
+            <h2 className="text-[28px] font-extrabold tracking-normal text-ink sm:text-[34px]">
               Biens en vedette
             </h2>
           </div>

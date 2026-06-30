@@ -29,18 +29,21 @@ export function SearchBar() {
   }
 
   return (
-    <div className="mx-auto flex max-w-[740px] flex-col gap-2 rounded-2xl bg-white p-1.5 shadow-[0_12px_48px_rgba(0,0,0,0.32)] sm:flex-row sm:items-stretch">
+    <div
+      className="mx-auto flex min-w-0 flex-col gap-2 rounded-2xl bg-white p-2 shadow-[0_12px_48px_rgba(0,0,0,0.32)] sm:flex-row sm:items-stretch sm:p-1.5"
+      style={{ width: "min(740px, calc(100vw - 32px))" }}
+    >
       {/* Lieu */}
-      <label className="flex flex-1 items-center gap-2.5 px-4 py-2.5 sm:border-r sm:border-line">
+      <label className="flex min-w-0 flex-1 items-center gap-2.5 px-3 py-2.5 sm:border-r sm:border-line sm:px-4">
         <MapPin className="size-[18px] shrink-0 text-brand-500" />
-        <span className="flex-1 text-left">
+        <span className="min-w-0 flex-1 text-left">
           <span className="block text-[10px] font-bold uppercase tracking-wide text-faint">
             Lieu
           </span>
           <select
             value={ville}
             onChange={(e) => setVille(e.target.value)}
-            className="-ml-0.5 w-full cursor-pointer appearance-none bg-transparent text-[15px] font-medium text-ink outline-none"
+            className="-ml-0.5 w-full min-w-0 cursor-pointer appearance-none bg-transparent text-[15px] font-medium text-ink outline-none"
           >
             {VILLES.map((v) => (
               <option key={v}>{v}</option>
@@ -50,16 +53,16 @@ export function SearchBar() {
       </label>
 
       {/* Type de bien */}
-      <label className="flex items-center gap-2 px-4 py-2.5 sm:w-[200px] sm:border-r sm:border-line">
+      <label className="flex min-w-0 items-center gap-2 px-3 py-2.5 sm:w-[200px] sm:border-r sm:border-line sm:px-4">
         <Home className="size-[18px] shrink-0 text-brand-500" />
-        <span className="flex-1 text-left">
+        <span className="min-w-0 flex-1 text-left">
           <span className="block text-[10px] font-bold uppercase tracking-wide text-faint">
             Type de bien
           </span>
           <select
             value={type}
             onChange={(e) => setType(e.target.value)}
-            className="-ml-0.5 w-full cursor-pointer appearance-none bg-transparent text-[15px] font-medium text-ink outline-none"
+            className="-ml-0.5 w-full min-w-0 cursor-pointer appearance-none bg-transparent text-[15px] font-medium text-ink outline-none"
           >
             {TYPES.map((t) => (
               <option key={t}>{t}</option>
@@ -70,13 +73,13 @@ export function SearchBar() {
       </label>
 
       {/* Toggle Vente / Location */}
-      <div className="flex items-center gap-1 p-1 sm:w-[170px]">
+      <div className="flex w-full min-w-0 items-center gap-1 p-1 sm:w-[170px]">
         {(["vente", "location"] as const).map((t) => (
           <button
             key={t}
             type="button"
             onClick={() => setTransaction(t)}
-            className={`h-full flex-1 rounded-[10px] py-2.5 text-sm font-bold capitalize transition-colors ${
+            className={`h-full min-w-0 flex-1 rounded-[10px] px-2 py-2.5 text-sm font-bold capitalize transition-colors ${
               transaction === t
                 ? "bg-brand-500 text-white"
                 : "text-faint hover:text-ink"
@@ -91,7 +94,7 @@ export function SearchBar() {
       <button
         type="button"
         onClick={submit}
-        className="flex items-center justify-center gap-2 whitespace-nowrap rounded-[10px] bg-gold-400 px-7 py-3 text-[15px] font-bold text-white transition-colors hover:bg-gold-500"
+        className="flex w-full items-center justify-center gap-2 whitespace-nowrap rounded-[10px] bg-gold-400 px-7 py-3 text-[15px] font-bold text-white transition-colors hover:bg-gold-500 sm:w-auto"
       >
         <Search className="size-[17px]" />
         Rechercher
