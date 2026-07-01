@@ -48,7 +48,7 @@ function priceLabel(p: Property) {
 export function AgentDashboard() {
   const [biens, setBiens] = useState<Property[]>([]);
   const [visits, setVisits] = useState<Visit[]>([]);
-  const [userName, setUserName] = useState(currentUser.name);
+  const [userName, setUserName] = useState("Utilisateur Akwaba");
 
   const refresh = useCallback(() => {
     setBiens(myProperties());

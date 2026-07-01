@@ -1,3 +1,6 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import {
   LayoutDashboard,
@@ -10,7 +13,12 @@ import {
   BookOpen,
   PenLine,
 } from "lucide-react";
-import { currentUser } from "@/lib/mock/dashboard";
+import {
+  readDemoUser,
+  ROLE_LABEL,
+  type DemoUser,
+} from "@/lib/demo-store";
+import { initials } from "@/lib/utils";
 
 const NAV = [
   { icon: LayoutDashboard, label: "Tableau de bord", href: "/tableau-de-bord", active: true },
@@ -23,6 +31,18 @@ const NAV = [
 ];
 
 export function DashboardSidebar() {
+  const [user, setUser] = useState<DemoUser | null>(null);
+  const name = user?.name ?? "Utilisateur Akwaba";
+  const roleLabel = user ? ROLE_LABEL[user.role] : "Compte Akwaba";
+
+  useEffect(() => {
+    const id = window.setTimeout(() => {
+      setUser(readDemoUser());
+    }, 0);
+
+    return () => window.clearTimeout(id);
+  }, []);
+
   return (
     <aside className="hidden w-60 shrink-0 flex-col overflow-y-auto bg-brand-500 lg:flex">
       {/* User */}
@@ -32,16 +52,16 @@ export function DashboardSidebar() {
             className="grid size-12 shrink-0 place-items-center rounded-[13px] text-[17px] font-bold text-white"
             style={{ background: "linear-gradient(135deg,rgba(255,255,255,.15),rgba(255,255,255,.08))" }}
           >
-            {currentUser.initials}
+            {initials(name)}
           </span>
           <div className="min-w-0 flex-1">
             <div className="truncate text-sm font-bold text-white">
-              {currentUser.name}
+              {name}
             </div>
-            <div className="text-xs text-white/55">{currentUser.agency}</div>
+            <div className="text-xs text-white/55">{roleLabel}</div>
           </div>
         </div>
-        {currentUser.certified && (
+        {(user?.role === "agent" || user?.role === "expert") && (
           <span className="inline-flex items-center gap-1.5 rounded-md bg-white/10 px-2.5 py-1">
             <ShieldCheck className="size-[11px] text-[#4DE8A0]" />
             <span className="text-[11px] font-semibold text-white/85">

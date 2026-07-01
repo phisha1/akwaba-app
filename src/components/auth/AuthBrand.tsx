@@ -18,7 +18,6 @@ export function LoginBrand() {
         <FloatingCard
           className="left-6 top-2 -rotate-2"
           gradient="linear-gradient(145deg,#1a3060,#2d5a9c)"
-          imageUrl="/images/appartement.jpg"
           badge="Location"
           price="350 000 FCFA/mois"
           title="Appartement Bonamoussadi"
@@ -27,7 +26,6 @@ export function LoginBrand() {
         <FloatingCard
           className="left-1 top-7 rotate-2"
           gradient="linear-gradient(145deg,#0a3d4a,#1a7a8c)"
-          imageUrl="/images/villa-avec-piscine.jpg"
           badge="Vente"
           price="285 000 000 FCFA"
           title="Villa contemporaine · Bastos"

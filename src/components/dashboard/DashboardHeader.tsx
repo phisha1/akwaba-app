@@ -1,7 +1,11 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Bell, ChevronDown } from "lucide-react";
 import { Logo } from "@/components/layout/Logo";
-import { currentUser } from "@/lib/mock/dashboard";
+import { readDemoUser, type DemoUser } from "@/lib/demo-store";
+import { initials } from "@/lib/utils";
 
 const NAV = [
   { href: "/recherche", label: "Acheter" },
@@ -10,6 +14,18 @@ const NAV = [
 ];
 
 export function DashboardHeader() {
+  const [user, setUser] = useState<DemoUser | null>(null);
+  const name = user?.name ?? "Utilisateur Akwaba";
+  const firstName = name.split(" ")[0] || "Utilisateur";
+
+  useEffect(() => {
+    const id = window.setTimeout(() => {
+      setUser(readDemoUser());
+    }, 0);
+
+    return () => window.clearTimeout(id);
+  }, []);
+
   return (
     <header className="flex h-[70px] shrink-0 items-center justify-between border-b border-line bg-white px-5 sm:px-8 lg:px-14">
       <Logo />
@@ -43,10 +59,10 @@ export function DashboardHeader() {
             className="grid size-8 place-items-center rounded-[9px] text-[13px] font-bold text-white"
             style={{ background: "linear-gradient(135deg,#0E4D5C,#1a8a7c)" }}
           >
-            {currentUser.initials}
+            {initials(name)}
           </span>
           <span className="hidden text-sm font-semibold text-ink sm:block">
-            {currentUser.shortName}
+            {firstName}
           </span>
           <ChevronDown className="size-3.5 text-faint" />
         </button>
