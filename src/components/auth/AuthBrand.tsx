@@ -18,6 +18,7 @@ export function LoginBrand() {
         <FloatingCard
           className="left-6 top-2 -rotate-2"
           gradient="linear-gradient(145deg,#1a3060,#2d5a9c)"
+          imageUrl="/images/appartement.jpg"
           badge="Location"
           price="350 000 FCFA/mois"
           title="Appartement Bonamoussadi"
@@ -26,6 +27,7 @@ export function LoginBrand() {
         <FloatingCard
           className="left-1 top-7 rotate-2"
           gradient="linear-gradient(145deg,#0a3d4a,#1a7a8c)"
+          imageUrl="/images/villa-avec-piscine.jpg"
           badge="Vente"
           price="285 000 000 FCFA"
           title="Villa contemporaine · Bastos"
@@ -40,6 +42,7 @@ export function LoginBrand() {
 function FloatingCard({
   className,
   gradient,
+  imageUrl,
   badge,
   price,
   title,
@@ -48,6 +51,7 @@ function FloatingCard({
 }: {
   className: string;
   gradient: string;
+  imageUrl?: string;
   badge: string;
   price: string;
   title: string;
@@ -63,8 +67,12 @@ function FloatingCard({
       }`}
     >
       <div
-        className="relative flex h-[100px] items-end px-3 pb-2.5"
-        style={{ background: gradient }}
+        className="relative flex h-[100px] items-end bg-cover bg-center px-3 pb-2.5"
+        style={{
+          background: imageUrl
+            ? `linear-gradient(180deg, rgba(5, 30, 41, 0.06) 0%, rgba(5, 30, 41, 0.18) 42%, rgba(5, 30, 41, 0.86) 100%), url('${imageUrl}')`
+            : gradient,
+        }}
       >
         <span className="absolute left-2 top-2 rounded bg-brand-500 px-1.5 py-0.5 text-[10px] font-bold text-white">
           {badge}
