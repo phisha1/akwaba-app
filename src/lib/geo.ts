@@ -47,6 +47,8 @@ export interface SearchFilters {
   ville?: string;
   type?: string;
   radiusKm?: number;
+  priceMin?: number;
+  priceMax?: number;
 }
 
 export interface RankedProperty {
@@ -72,6 +74,10 @@ export function searchProperties(
         return false;
       if (filters.type && property.type !== filters.type) return false;
       if (filters.ville && property.city !== filters.ville) return false;
+      if (filters.priceMin != null && property.price < filters.priceMin)
+        return false;
+      if (filters.priceMax != null && property.price > filters.priceMax)
+        return false;
       if (center && distanceKm != null && distanceKm > radius) return false;
       return true;
     })

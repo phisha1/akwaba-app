@@ -1,9 +1,13 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { CheckCircle2 } from "lucide-react";
-import { saveStoredProperty } from "@/lib/demo-store";
+import {
+  saveStoredProperty,
+  getPropertyById,
+  patchProperty,
+} from "@/lib/demo-store";
 import type { Transaction } from "@/lib/types";
 
 const TYPES = ["Maison", "Appartement", "Studio", "Terrain", "Local commercial", "Chambre"];
@@ -14,6 +18,8 @@ const inputClass =
 
 export function PropertyPublishForm() {
   const router = useRouter();
+  const params = useSearchParams();
+  const editId = params.get("id");
   const [title, setTitle] = useState("");
   const [type, setType] = useState("Maison");
   const [transaction, setTransaction] = useState<Transaction>("vente");
@@ -25,9 +31,25 @@ export function PropertyPublishForm() {
   const [description, setDescription] = useState("");
   const [published, setPublished] = useState(false);
 
+  // Edit mode: prefill from the stored/catalogue listing.
+  useEffect(() => {
+    if (!editId) return;
+    const p = getPropertyById(editId);
+    if (!p) return;
+    setTitle(p.title);
+    setType(p.type);
+    setTransaction(p.transaction);
+    setPrice(String(p.price));
+    setCity(p.city);
+    setNeighborhood(p.neighborhood);
+    setPieces(p.pieces != null ? String(p.pieces) : "3");
+    setSurface(String(p.surface));
+    setDescription(p.description ?? "");
+  }, [editId]);
+
   function submit(e: React.FormEvent) {
     e.preventDefault();
-    const property = saveStoredProperty({
+    const draft = {
       title,
       type,
       transaction,
@@ -37,7 +59,16 @@ export function PropertyPublishForm() {
       pieces: type === "Terrain" ? null : Number(pieces),
       surface: Number(surface),
       description,
-    });
+    };
+
+    if (editId) {
+      patchProperty(editId, draft);
+      setPublished(true);
+      window.setTimeout(() => router.push("/tableau-de-bord"), 900);
+      return;
+    }
+
+    const property = saveStoredProperty(draft);
     setPublished(true);
     window.setTimeout(() => {
       router.push(`/recherche?transaction=${property.transaction}&ville=${property.city}`);
@@ -51,18 +82,21 @@ export function PropertyPublishForm() {
           Front-only
         </span>
         <h1 className="mt-4 text-2xl font-extrabold text-ink">
-          Publier un bien
+          {editId ? "Modifier le bien" : "Publier un bien"}
         </h1>
         <p className="mt-2 text-sm leading-relaxed text-muted">
-          Cette annonce sera enregistrée dans le navigateur pour la démo. Elle
-          apparaîtra ensuite dans la recherche sans backend.
+          {editId
+            ? "Vos modifications sont enregistrées dans le navigateur pour la démo et se reflètent dans la recherche."
+            : "Cette annonce sera enregistrée dans le navigateur pour la démo. Elle apparaîtra ensuite dans la recherche sans backend."}
         </p>
       </div>
 
       {published && (
         <div className="mb-5 flex items-center gap-2 rounded-xl border border-success bg-success-bg p-4 text-sm font-bold text-success">
           <CheckCircle2 className="size-5" />
-          Bien publié. Redirection vers la recherche...
+          {editId
+            ? "Modifications enregistrées. Redirection vers le tableau de bord..."
+            : "Bien publié. Redirection vers la recherche..."}
         </div>
       )}
 
@@ -180,7 +214,7 @@ export function PropertyPublishForm() {
             type="submit"
             className="w-full rounded-xl bg-gold-400 py-3.5 text-sm font-bold text-white shadow-[0_4px_14px_rgba(224,163,62,0.28)] hover:bg-gold-500"
           >
-            Publier le bien
+            {editId ? "Enregistrer les modifications" : "Publier le bien"}
           </button>
         </div>
       </div>

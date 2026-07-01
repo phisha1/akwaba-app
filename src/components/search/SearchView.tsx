@@ -6,7 +6,7 @@ import dynamic from "next/dynamic";
 import { useSearchParams } from "next/navigation";
 import { ChevronDown, MapPin, MapIcon, List } from "lucide-react";
 import { properties } from "@/lib/mock/properties";
-import { readStoredProperties } from "@/lib/demo-store";
+import { getAllProperties } from "@/lib/demo-store";
 import { CITY_CENTERS, searchProperties } from "@/lib/geo";
 import type { Property, Transaction } from "@/lib/types";
 import { CompactPropertyCard } from "@/components/property/CompactPropertyCard";
@@ -46,19 +46,13 @@ export function SearchView() {
   const [radiusKm, setRadiusKm] = useState(Number(params.get("rayon")) || 10);
   const [activeId, setActiveId] = useState<string | null>(null);
   const [mobileMap, setMobileMap] = useState(false);
-  const [localProperties, setLocalProperties] = useState<Property[]>([]);
+  const [priceMin, setPriceMin] = useState<number | undefined>(undefined);
+  const [priceMax, setPriceMax] = useState<number | undefined>(undefined);
+  const [allProperties, setAllProperties] = useState<Property[]>(properties);
 
   useEffect(() => {
-    const id = window.setTimeout(() => {
-      setLocalProperties(readStoredProperties());
-    }, 0);
-    return () => window.clearTimeout(id);
+    setAllProperties(getAllProperties());
   }, []);
-
-  const allProperties = useMemo(
-    () => [...localProperties, ...properties],
-    [localProperties],
-  );
 
   const results = useMemo(
     () =>
@@ -67,8 +61,10 @@ export function SearchView() {
         ville,
         type: type === "Tous les types" ? undefined : type,
         radiusKm,
+        priceMin,
+        priceMax,
       }),
-    [allProperties, transaction, ville, type, radiusKm],
+    [allProperties, transaction, ville, type, radiusKm, priceMin, priceMax],
   );
 
   const center = CITY_CENTERS[ville] ?? CITY_CENTERS.Yaoundé;
@@ -106,7 +102,14 @@ export function SearchView() {
           ))}
         </div>
 
-        <FilterButton label="Prix" />
+        <PriceFilter
+          min={priceMin}
+          max={priceMax}
+          onChange={(lo, hi) => {
+            setPriceMin(lo);
+            setPriceMax(hi);
+          }}
+        />
 
         <div className="flex shrink-0 items-center gap-1.5 rounded-lg border-[1.5px] border-brand-500 bg-brand-50 px-3.5 py-1.5 text-[13px] font-semibold text-brand-500">
           <MapPin className="size-3" />
@@ -225,6 +228,46 @@ function FilterButton({
       {label}
       <ChevronDown className="size-3" />
     </button>
+  );
+}
+
+function PriceFilter({
+  min,
+  max,
+  onChange,
+}: {
+  min?: number;
+  max?: number;
+  onChange: (lo?: number, hi?: number) => void;
+}) {
+  const active = min != null || max != null;
+  return (
+    <div
+      className={`flex shrink-0 items-center gap-1.5 rounded-lg border-[1.5px] px-3 py-1.5 text-[13px] font-medium ${
+        active ? "border-brand-500 bg-brand-50 text-brand-500" : "border-line bg-white text-ink"
+      }`}
+    >
+      <span className={active ? "text-brand-500" : "text-muted"}>Prix</span>
+      <input
+        type="number"
+        min="0"
+        inputMode="numeric"
+        placeholder="min"
+        value={min ?? ""}
+        onChange={(e) => onChange(e.target.value ? Number(e.target.value) : undefined, max)}
+        className="w-[68px] bg-transparent outline-none placeholder:text-faint"
+      />
+      <span className="text-line-cool">–</span>
+      <input
+        type="number"
+        min="0"
+        inputMode="numeric"
+        placeholder="max"
+        value={max ?? ""}
+        onChange={(e) => onChange(min, e.target.value ? Number(e.target.value) : undefined)}
+        className="w-[68px] bg-transparent outline-none placeholder:text-faint"
+      />
+    </div>
   );
 }
 

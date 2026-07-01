@@ -13,7 +13,6 @@ import {
   LayoutGrid,
   Trees,
   ShieldCheck,
-  Calendar,
   Mail,
   Phone,
   MessageSquare,
@@ -31,6 +30,7 @@ import {
 } from "@/lib/utils";
 import { CITY_CENTERS, haversineKm, formatDistance } from "@/lib/geo";
 import { DetailMapLoader } from "@/components/property/DetailMapLoader";
+import { RequestVisitButton } from "@/components/property/RequestVisitButton";
 
 export function generateStaticParams() {
   return properties.map((p) => ({ id: p.id }));
@@ -317,10 +317,10 @@ export default async function FichePage({
               </div>
             </div>
 
-            <button className="mb-2.5 flex w-full items-center justify-center gap-2.5 rounded-xl bg-gold-400 py-[15px] text-[15px] font-bold text-white shadow-[0_4px_14px_rgba(224,163,62,0.32)] transition-colors hover:bg-gold-500">
-              <Calendar className="size-[17px]" />
-              Demander une visite
-            </button>
+            <RequestVisitButton
+              propertyId={property.id}
+              propertyTitle={property.title}
+            />
             <button className="flex w-full items-center justify-center gap-2.5 rounded-xl border-2 border-brand-500 py-[13px] text-[15px] font-bold text-brand-500 transition-colors hover:bg-brand-50">
               <Mail className="size-[17px]" />
               Faire une offre
