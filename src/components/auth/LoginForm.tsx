@@ -11,7 +11,7 @@ import {
   type DemoRole,
 } from "@/lib/demo-store";
 
-const LOGIN_ROLES: DemoRole[] = ["lecteur", "auteur", "expert", "agent", "admin"];
+const LOGIN_ROLES: DemoRole[] = ["acheteur", "agent", "expert", "admin"];
 
 export function LoginForm() {
   const router = useRouter();

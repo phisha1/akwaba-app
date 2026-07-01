@@ -17,7 +17,7 @@ const PLANS = [
       "Articles gratuits",
       "Recherche de biens",
       "Forum communautaire",
-      "Dashboard lecteur",
+      "Dashboard acheteur / locataire",
     ],
     featured: false,
   },

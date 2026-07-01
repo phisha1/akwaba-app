@@ -22,30 +22,21 @@ const CONFIG: Record<
     actions: { href: string; label: string; desc: string; icon: typeof FileText }[];
   }
 > = {
-  lecteur: {
-    title: "Dashboard lecteur",
-    desc: "Un espace simple pour suivre vos recherches, articles, formations et questions.",
+  acheteur: {
+    title: "Dashboard acheteur / locataire",
+    desc: "Un espace simple pour suivre vos recherches, visites, favoris, articles utiles et questions.",
     actions: [
-      { href: "/articles", label: "Lire des articles", desc: "Conseils et guides pratiques", icon: FileText },
-      { href: "/formations", label: "Suivre une formation", desc: "Modules courts et structurés", icon: GraduationCap },
+      { href: "/recherche", label: "Chercher un bien", desc: "Achat, location et carte", icon: BookOpen },
+      { href: "/articles", label: "Conseils utiles", desc: "Guides pour éviter les pièges", icon: FileText },
       { href: "/forum", label: "Mes questions", desc: "Forum et réponses utiles", icon: MessageCircle },
-      { href: "/recherche", label: "Biens favoris", desc: "Recherche immobilière", icon: BookOpen },
-    ],
-  },
-  auteur: {
-    title: "Dashboard auteur",
-    desc: "Un espace de rédaction pour préparer des articles et suivre leur impact.",
-    actions: [
-      { href: "/tableau-de-bord/articles/nouveau", label: "Nouvel article", desc: "Créer un guide ou conseil", icon: PenLine },
-      { href: "/articles", label: "Mes articles", desc: "Brouillons et publications", icon: FileText },
-      { href: "/filieres", label: "Catégories", desc: "Classer par filière", icon: BookOpen },
-      { href: "/tarifs", label: "Monétisation", desc: "Free et Premium", icon: CalendarCheck },
+      { href: "/formations", label: "Apprendre", desc: "Formations courtes", icon: GraduationCap },
     ],
   },
   expert: {
     title: "Dashboard expert",
-    desc: "Un espace pour organiser vos formations, roadmap et réponses communautaires.",
+    desc: "Un espace pour publier des conseils, créer des formations, planifier une roadmap et répondre à la communauté.",
     actions: [
+      { href: "/tableau-de-bord/articles/nouveau", label: "Nouvel article", desc: "Créer un guide expert", icon: PenLine },
       { href: "/tableau-de-bord/formations/nouveau", label: "Nouvelle formation", desc: "Modules, durée, prix", icon: GraduationCap },
       { href: "/forum", label: "Répondre au forum", desc: "Questions de la communauté", icon: MessageCircle },
       { href: "/formations", label: "Mes formations", desc: "Catalogue expert", icon: BookOpen },

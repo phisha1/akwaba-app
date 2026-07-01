@@ -1,7 +1,7 @@
 import type { Property, Transaction } from "@/lib/types";
 import { CITY_CENTERS } from "@/lib/geo";
 
-export type DemoRole = "lecteur" | "auteur" | "expert" | "agent" | "admin";
+export type DemoRole = "acheteur" | "expert" | "agent" | "admin";
 
 export interface DemoUser {
   name: string;
@@ -25,16 +25,14 @@ const USER_KEY = "akwaba-demo-user";
 const PROPERTIES_KEY = "akwaba-demo-properties";
 
 export const ROLE_DASHBOARD_PATH: Record<DemoRole, string> = {
-  lecteur: "/tableau-de-bord/lecteur",
-  auteur: "/tableau-de-bord/auteur",
+  acheteur: "/tableau-de-bord/acheteur",
   expert: "/tableau-de-bord/expert",
   agent: "/tableau-de-bord",
   admin: "/tableau-de-bord/admin",
 };
 
 export const ROLE_LABEL: Record<DemoRole, string> = {
-  lecteur: "Lecteur",
-  auteur: "Auteur",
+  acheteur: "Acheteur / Locataire",
   expert: "Expert",
   agent: "Agent / Propriétaire",
   admin: "Admin",

@@ -10,7 +10,7 @@ import {
   type DemoRole,
 } from "@/lib/demo-store";
 
-type Role = Extract<DemoRole, "lecteur" | "auteur" | "expert" | "agent">;
+type Role = Extract<DemoRole, "acheteur" | "expert" | "agent">;
 
 const ROLES: {
   value: Role;
@@ -19,16 +19,10 @@ const ROLES: {
   desc: string;
 }[] = [
   {
-    value: "lecteur",
+    value: "acheteur",
     icon: User,
-    title: "Lecteur",
-    desc: "Je cherche, j'apprends et je participe au forum.",
-  },
-  {
-    value: "auteur",
-    icon: User,
-    title: "Auteur",
-    desc: "Je rédige des articles et guides immobiliers.",
+    title: "Acheteur / Locataire",
+    desc: "Je cherche un bien, je demande des visites et je lis les conseils.",
   },
   {
     value: "expert",
@@ -49,7 +43,7 @@ const inputClass =
 
 export function SignupForm() {
   const router = useRouter();
-  const [role, setRole] = useState<Role>("lecteur");
+  const [role, setRole] = useState<Role>("acheteur");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");

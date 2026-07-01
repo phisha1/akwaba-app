@@ -7,7 +7,7 @@ export default function NouvelArticlePage() {
       <PenLine className="mb-4 size-7 text-brand-500" />
       <h1 className="text-2xl font-extrabold text-ink">Nouvel article</h1>
       <p className="mt-2 text-sm leading-relaxed text-muted">
-        Cette page prépare le parcours auteur sans backend. Le prochain niveau
+        Cette page prépare le parcours expert sans backend. Le prochain niveau
         serait d&apos;ajouter un éditeur local et une prévisualisation avant
         publication.
       </p>
