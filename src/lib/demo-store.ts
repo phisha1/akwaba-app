@@ -45,9 +45,9 @@ export const ROLE_DASHBOARD_PATH: Record<DemoRole, string> = {
 };
 
 export const ROLE_LABEL: Record<DemoRole, string> = {
-  acheteur: "Acheteur / Locataire",
-  particulier: "Particulier / Bailleur",
-  expert: "Expert",
+  acheteur: "Je cherche un bien",
+  particulier: "Je publie mon bien",
+  expert: "Expert / Formateur",
   agent: "Agent / Propriétaire",
   admin: "Admin",
 };

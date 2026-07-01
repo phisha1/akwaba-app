@@ -23,8 +23,12 @@ export function Header() {
 
   // Re-read the session on every navigation so the header stays in sync.
   useEffect(() => {
-    setUser(readDemoUser());
-    setReady(true);
+    const id = window.setTimeout(() => {
+      setUser(readDemoUser());
+      setReady(true);
+    }, 0);
+
+    return () => window.clearTimeout(id);
   }, [pathname]);
 
   function logout() {

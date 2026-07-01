@@ -84,7 +84,7 @@ export function LoginForm() {
       </label>
 
       <div className="mb-4 text-right">
-        <Link href="#" className="text-[13px] font-medium text-brand-500 hover:underline">
+        <Link href="/mot-de-passe-oublie" className="text-[13px] font-medium text-brand-500 hover:underline">
           Mot de passe oublié ?
         </Link>
       </div>

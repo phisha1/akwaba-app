@@ -25,25 +25,25 @@ const ROLES: {
   {
     value: "acheteur",
     icon: User,
-    title: "Acheteur / Locataire",
+    title: "Je cherche un bien",
     desc: "Je cherche un bien, je demande des visites et je lis les conseils.",
   },
   {
     value: "particulier",
     icon: KeyRound,
-    title: "Particulier / Bailleur",
+    title: "Je publie mon bien",
     desc: "Je publie mon propre bien à vendre ou à louer.",
   },
   {
     value: "expert",
     icon: Briefcase,
-    title: "Expert",
+    title: "Je suis expert / formateur",
     desc: "Je crée des formations et réponds à la communauté.",
   },
   {
     value: "agent",
     icon: Briefcase,
-    title: "Agent immobilier",
+    title: "Je suis agent immobilier",
     desc: "Je gère un portefeuille de biens (professionnel).",
   },
 ];
@@ -81,7 +81,6 @@ export function SignupForm() {
       </p>
 
       {/* Role selector */}
-      <div className="mb-2.5 text-[13px] font-semibold text-ink">Je suis…</div>
       <div className="mb-6 grid grid-cols-1 gap-3 sm:grid-cols-2">
         {ROLES.map((r) => {
           const selected = role === r.value;
