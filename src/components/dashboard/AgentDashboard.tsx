@@ -56,9 +56,13 @@ export function AgentDashboard() {
   }, []);
 
   useEffect(() => {
-    refresh();
-    const u = readDemoUser();
-    if (u?.name) setUserName(u.name);
+    const id = window.setTimeout(() => {
+      refresh();
+      const u = readDemoUser();
+      if (u?.name) setUserName(u.name);
+    }, 0);
+
+    return () => window.clearTimeout(id);
   }, [refresh]);
 
   const activeCount = biens.filter((b) => b.status === "publie").length;

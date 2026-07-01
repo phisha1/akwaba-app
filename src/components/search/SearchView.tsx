@@ -51,7 +51,11 @@ export function SearchView() {
   const [allProperties, setAllProperties] = useState<Property[]>(properties);
 
   useEffect(() => {
-    setAllProperties(getAllProperties());
+    const id = window.setTimeout(() => {
+      setAllProperties(getAllProperties());
+    }, 0);
+
+    return () => window.clearTimeout(id);
   }, []);
 
   const results = useMemo(

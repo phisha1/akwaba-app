@@ -34,17 +34,21 @@ export function PropertyPublishForm() {
   // Edit mode: prefill from the stored/catalogue listing.
   useEffect(() => {
     if (!editId) return;
-    const p = getPropertyById(editId);
-    if (!p) return;
-    setTitle(p.title);
-    setType(p.type);
-    setTransaction(p.transaction);
-    setPrice(String(p.price));
-    setCity(p.city);
-    setNeighborhood(p.neighborhood);
-    setPieces(p.pieces != null ? String(p.pieces) : "3");
-    setSurface(String(p.surface));
-    setDescription(p.description ?? "");
+    const id = window.setTimeout(() => {
+      const p = getPropertyById(editId);
+      if (!p) return;
+      setTitle(p.title);
+      setType(p.type);
+      setTransaction(p.transaction);
+      setPrice(String(p.price));
+      setCity(p.city);
+      setNeighborhood(p.neighborhood);
+      setPieces(p.pieces != null ? String(p.pieces) : "3");
+      setSurface(String(p.surface));
+      setDescription(p.description ?? "");
+    }, 0);
+
+    return () => window.clearTimeout(id);
   }, [editId]);
 
   function submit(e: React.FormEvent) {
