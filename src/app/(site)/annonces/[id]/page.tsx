@@ -117,8 +117,12 @@ export default async function FichePage({
           {/* Gallery */}
           <div className="overflow-hidden rounded-2xl bg-[#111]">
             <div
-              className="relative h-[300px] overflow-hidden sm:h-[456px]"
-              style={{ background: "linear-gradient(145deg,#051e29 0%,#0a3d4a 42%,#1a7a8c 100%)" }}
+              className="relative h-[300px] overflow-hidden bg-cover bg-center sm:h-[456px]"
+              style={
+                property.imageUrl
+                  ? { backgroundImage: `url('${property.imageUrl}')` }
+                  : { background: "linear-gradient(145deg,#051e29 0%,#0a3d4a 42%,#1a7a8c 100%)" }
+              }
             >
               <div className="absolute left-5 top-5 z-[2] flex gap-2">
                 <span className="rounded-md bg-brand-500 px-3 py-1 text-xs font-bold text-white">

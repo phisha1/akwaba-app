@@ -3,14 +3,17 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { User, Briefcase, Check, Eye, EyeOff } from "lucide-react";
+import { User, Briefcase, Check, Eye, EyeOff, KeyRound } from "lucide-react";
 import {
   dashboardPathForRole,
   saveDemoUser,
   type DemoRole,
 } from "@/lib/demo-store";
 
-type Role = Extract<DemoRole, "acheteur" | "expert" | "agent">;
+type Role = Extract<
+  DemoRole,
+  "acheteur" | "particulier" | "expert" | "agent"
+>;
 
 const ROLES: {
   value: Role;
@@ -25,6 +28,12 @@ const ROLES: {
     desc: "Je cherche un bien, je demande des visites et je lis les conseils.",
   },
   {
+    value: "particulier",
+    icon: KeyRound,
+    title: "Particulier / Bailleur",
+    desc: "Je publie mon propre bien à vendre ou à louer.",
+  },
+  {
     value: "expert",
     icon: Briefcase,
     title: "Expert",
@@ -33,8 +42,8 @@ const ROLES: {
   {
     value: "agent",
     icon: Briefcase,
-    title: "Propriétaire / Agent",
-    desc: "Je publie et gère mes biens immobiliers.",
+    title: "Agent immobilier",
+    desc: "Je gère un portefeuille de biens (professionnel).",
   },
 ];
 

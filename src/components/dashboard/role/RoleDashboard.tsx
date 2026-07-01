@@ -33,6 +33,16 @@ const CONFIG: Record<
       { href: "/formations", label: "Apprendre", desc: "Formations courtes", icon: GraduationCap },
     ],
   },
+  particulier: {
+    title: "Espace bailleur",
+    desc: "Publiez votre bien, suivez les demandes de visite et gérez vos annonces.",
+    actions: [
+      { href: "/tableau-de-bord/biens/nouveau", label: "Publier mon bien", desc: "Vente ou location", icon: FileText },
+      { href: "/tableau-de-bord", label: "Mes annonces", desc: "Statut, visites, offres", icon: BookOpen },
+      { href: "/recherche", label: "Voir la recherche", desc: "Contrôler la visibilité", icon: ShieldCheck },
+      { href: "/articles", label: "Conseils", desc: "Bien louer, bien vendre", icon: FileText },
+    ],
+  },
   expert: {
     title: "Dashboard expert",
     desc: "Un espace pour publier des conseils, créer des formations, planifier une roadmap et répondre à la communauté.",

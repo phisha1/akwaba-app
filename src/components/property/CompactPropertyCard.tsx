@@ -29,12 +29,18 @@ export function CompactPropertyCard({
       }`}
     >
       <div
-        className="relative w-32 shrink-0 overflow-hidden"
-        style={{ background: property.gradient }}
+        className="relative w-32 shrink-0 overflow-hidden bg-cover bg-center"
+        style={
+          property.imageUrl
+            ? { backgroundImage: `url('${property.imageUrl}')` }
+            : { background: property.gradient }
+        }
       >
-        <span className="pointer-events-none absolute -bottom-2 -right-2 select-none text-[72px] font-extrabold leading-none text-white/[0.09]">
-          {property.letter}
-        </span>
+        {!property.imageUrl && (
+          <span className="pointer-events-none absolute -bottom-2 -right-2 select-none text-[72px] font-extrabold leading-none text-white/[0.09]">
+            {property.letter}
+          </span>
+        )}
         <span className="absolute left-2 top-2 z-[2] rounded bg-brand-500 px-1.5 py-0.5 text-[10px] font-bold text-white">
           {TRANSACTION_LABEL[property.transaction]}
         </span>

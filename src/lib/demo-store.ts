@@ -8,7 +8,12 @@ import type {
 import { CITY_CENTERS } from "@/lib/geo";
 import { properties as mockProperties } from "@/lib/mock/properties";
 
-export type DemoRole = "acheteur" | "expert" | "agent" | "admin";
+export type DemoRole =
+  | "acheteur"
+  | "particulier"
+  | "expert"
+  | "agent"
+  | "admin";
 
 export interface DemoUser {
   name: string;
@@ -33,6 +38,7 @@ const PROPERTIES_KEY = "akwaba-demo-properties";
 
 export const ROLE_DASHBOARD_PATH: Record<DemoRole, string> = {
   acheteur: "/tableau-de-bord/acheteur",
+  particulier: "/tableau-de-bord",
   expert: "/tableau-de-bord/expert",
   agent: "/tableau-de-bord",
   admin: "/tableau-de-bord/admin",
@@ -40,6 +46,7 @@ export const ROLE_DASHBOARD_PATH: Record<DemoRole, string> = {
 
 export const ROLE_LABEL: Record<DemoRole, string> = {
   acheteur: "Acheteur / Locataire",
+  particulier: "Particulier / Bailleur",
   expert: "Expert",
   agent: "Agent / Propriétaire",
   admin: "Admin",
@@ -61,6 +68,19 @@ export const ROLE_CAPABILITIES: Record<
       "Publier ou gérer des biens immobiliers",
       "Créer des articles ou des formations",
       "Modérer la plateforme",
+    ],
+  },
+  particulier: {
+    can: [
+      "Publier son propre bien (vente ou location)",
+      "Modifier et supprimer ses annonces",
+      "Changer le statut de son bien (disponible, réservé, vendu, loué)",
+      "Recevoir et gérer les demandes de visite",
+    ],
+    cannot: [
+      "Gérer un portefeuille comme un agent certifié",
+      "Créer des formations ou des articles d'expert",
+      "Administrer la plateforme",
     ],
   },
   expert: {

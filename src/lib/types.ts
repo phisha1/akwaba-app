@@ -30,7 +30,7 @@ export interface Property {
   views?: number;
   /** Public URL of the listing photo used in cards and galleries. */
   imageUrl?: string;
-  /** Gradient used for the photo panel in the maquette. */
+  /** Gradient used for the photo panel (fallback when no imageUrl). */
   gradient: string;
   /** Watermark letter shown on the photo panel. */
   letter: string;
