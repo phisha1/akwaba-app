@@ -5,25 +5,24 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Mail, Lock, Eye, EyeOff } from "lucide-react";
 import {
-  ROLE_LABEL,
   dashboardPathForRole,
+  readDemoUser,
   saveDemoUser,
-  type DemoRole,
 } from "@/lib/demo-store";
-
-const LOGIN_ROLES: DemoRole[] = ["acheteur", "agent", "expert", "admin"];
 
 export function LoginForm() {
   const router = useRouter();
   const [showPwd, setShowPwd] = useState(false);
   const [email, setEmail] = useState("");
-  const [role, setRole] = useState<DemoRole>("agent");
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+    // The profile is chosen at signup — login just resumes that account.
+    const existing = readDemoUser();
+    const role = existing?.role ?? "acheteur";
     saveDemoUser({
-      name: role === "admin" ? "Admin Akwaba" : "Jean-Pierre Mbida",
-      email: email || "demo@akwaba.cm",
+      name: existing?.name ?? "Membre Akwaba",
+      email: email || existing?.email || "demo@akwaba.cm",
       role,
     });
     router.push(dashboardPathForRole(role));
@@ -37,28 +36,6 @@ export function LoginForm() {
       <p className="mb-7 text-[15px] text-muted">
         Connectez-vous pour accéder à votre espace.
       </p>
-
-      <div className="mb-4">
-        <span className="mb-1.5 block text-[13px] font-semibold text-ink">
-          Profil de démonstration
-        </span>
-        <div className="grid grid-cols-2 gap-2">
-          {LOGIN_ROLES.map((item) => (
-            <button
-              key={item}
-              type="button"
-              onClick={() => setRole(item)}
-              className={`rounded-[10px] border-[1.5px] px-3 py-2 text-left text-xs font-bold transition-colors ${
-                role === item
-                  ? "border-brand-500 bg-brand-50 text-brand-500"
-                  : "border-line text-muted hover:border-brand-500"
-              }`}
-            >
-              {ROLE_LABEL[item]}
-            </button>
-          ))}
-        </div>
-      </div>
 
       <label className="mb-4 block">
         <span className="mb-1.5 block text-[13px] font-semibold text-ink">

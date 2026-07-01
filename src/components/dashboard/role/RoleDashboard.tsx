@@ -13,6 +13,7 @@ import {
   Users,
 } from "lucide-react";
 import { readDemoUser, ROLE_LABEL, type DemoRole } from "@/lib/demo-store";
+import { RoleCapabilities } from "@/components/dashboard/RoleCapabilities";
 
 const CONFIG: Record<
   DemoRole,
@@ -101,6 +102,10 @@ export function RoleDashboard({ role }: { role: DemoRole }) {
             <div className="mt-1 text-sm text-muted">{action.desc}</div>
           </Link>
         ))}
+      </div>
+
+      <div className="mt-4">
+        <RoleCapabilities role={role} />
       </div>
     </div>
   );

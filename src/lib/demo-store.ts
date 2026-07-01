@@ -45,6 +45,60 @@ export const ROLE_LABEL: Record<DemoRole, string> = {
   admin: "Admin",
 };
 
+/** What each profile can and cannot do — shown as a panel in the dashboard. */
+export const ROLE_CAPABILITIES: Record<
+  DemoRole,
+  { can: string[]; cannot: string[] }
+> = {
+  acheteur: {
+    can: [
+      "Rechercher et filtrer les biens (ville, type, prix)",
+      "Demander une visite et faire une offre",
+      "Lire les articles et suivre des formations",
+      "Poser des questions sur le forum",
+    ],
+    cannot: [
+      "Publier ou gérer des biens immobiliers",
+      "Créer des articles ou des formations",
+      "Modérer la plateforme",
+    ],
+  },
+  expert: {
+    can: [
+      "Publier des articles de conseil",
+      "Créer des formations (modules, durée, prix)",
+      "Répondre aux questions du forum",
+      "Consulter les biens et l'annuaire",
+    ],
+    cannot: [
+      "Publier des biens immobiliers",
+      "Gérer les visites et offres d'un agent",
+      "Modérer la plateforme",
+    ],
+  },
+  agent: {
+    can: [
+      "Publier des biens immobiliers",
+      "Modifier et supprimer ses annonces",
+      "Changer le statut (publié, réservé, vendu, loué)",
+      "Gérer les demandes de visite et les offres",
+    ],
+    cannot: [
+      "Créer des formations ou des articles d'expert",
+      "Administrer la plateforme et les rôles",
+    ],
+  },
+  admin: {
+    can: [
+      "Superviser utilisateurs, biens et contenus",
+      "Modérer annonces, articles et forum",
+      "Gérer les rôles et les abonnements",
+      "Configurer les filières et la cartographie",
+    ],
+    cannot: ["Accès complet — aucune restriction sur ce profil"],
+  },
+};
+
 function canUseStorage() {
   return typeof window !== "undefined" && Boolean(window.localStorage);
 }

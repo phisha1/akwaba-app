@@ -24,6 +24,7 @@ import {
 } from "@/lib/demo-store";
 import { currentUser, offers } from "@/lib/mock/dashboard";
 import { STATUS_INFO } from "@/lib/utils";
+import { RoleCapabilities } from "@/components/dashboard/RoleCapabilities";
 
 const STATUS_OPTIONS: { value: PropertyStatus; label: string }[] = [
   { value: "publie", label: "Publié" },
@@ -300,6 +301,10 @@ export function AgentDashboard() {
             </div>
           ))}
         </div>
+      </div>
+
+      <div className="mt-5">
+        <RoleCapabilities role="agent" />
       </div>
     </div>
   );
