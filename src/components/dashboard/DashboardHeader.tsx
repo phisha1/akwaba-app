@@ -1,17 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Link from "next/link";
 import { Bell, ChevronDown } from "lucide-react";
 import { Logo } from "@/components/layout/Logo";
 import { readDemoUser, type DemoUser } from "@/lib/demo-store";
 import { initials } from "@/lib/utils";
-
-const NAV = [
-  { href: "/recherche", label: "Acheter" },
-  { href: "/recherche?transaction=location", label: "Louer" },
-  { href: "/tableau-de-bord", label: "Vendre" },
-];
 
 export function DashboardHeader() {
   const [user, setUser] = useState<DemoUser | null>(null);
@@ -29,22 +22,6 @@ export function DashboardHeader() {
   return (
     <header className="flex h-[70px] shrink-0 items-center justify-between border-b border-line bg-white px-5 sm:px-8 lg:px-14">
       <Logo />
-
-      <nav className="hidden items-center gap-9 md:flex">
-        {NAV.map((item, i) => (
-          <Link
-            key={item.label}
-            href={item.href}
-            className={`border-b-2 pb-0.5 text-sm font-medium transition-colors ${
-              i === 0
-                ? "border-gold-400 text-brand-500"
-                : "border-transparent text-ink hover:text-brand-500"
-            }`}
-          >
-            {item.label}
-          </Link>
-        ))}
-      </nav>
 
       <div className="flex items-center gap-3.5">
         <button className="relative" aria-label="Notifications">

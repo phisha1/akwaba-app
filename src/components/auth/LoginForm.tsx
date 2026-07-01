@@ -3,29 +3,31 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Mail, Lock, Eye, EyeOff } from "lucide-react";
+import { Mail, Lock, Eye, EyeOff, AlertCircle } from "lucide-react";
 import {
+  authenticate,
   dashboardPathForRole,
-  readDemoUser,
   saveDemoUser,
+  DEMO_CREDENTIALS,
 } from "@/lib/demo-store";
 
 export function LoginForm() {
   const router = useRouter();
   const [showPwd, setShowPwd] = useState(false);
   const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    // The profile is chosen at signup — login just resumes that account.
-    const existing = readDemoUser();
-    const role = existing?.role ?? "acheteur";
-    saveDemoUser({
-      name: existing?.name ?? "Membre Akwaba",
-      email: email || existing?.email || "demo@akwaba.cm",
-      role,
-    });
-    router.push(dashboardPathForRole(role));
+    const user = authenticate(email, password);
+    if (!user) {
+      setError("E-mail ou mot de passe incorrect.");
+      return;
+    }
+    setError("");
+    saveDemoUser(user);
+    router.push(dashboardPathForRole(user.role));
   }
 
   return (
@@ -64,6 +66,8 @@ export function LoginForm() {
           <input
             type={showPwd ? "text" : "password"}
             required
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
             placeholder="Votre mot de passe"
             autoComplete="current-password"
             className="w-full rounded-[10px] border-[1.5px] border-line py-3 pl-[42px] pr-[42px] text-[15px] text-ink outline-none transition focus:border-brand-500 focus:ring-[3px] focus:ring-brand-500/10"
@@ -79,18 +83,32 @@ export function LoginForm() {
         </div>
       </label>
 
-      <div className="mb-5 text-right">
+      <div className="mb-4 text-right">
         <Link href="#" className="text-[13px] font-medium text-brand-500 hover:underline">
           Mot de passe oublié ?
         </Link>
       </div>
 
+      {error && (
+        <div className="mb-4 flex items-center gap-2 rounded-[10px] border border-[#FCA5A5] bg-[#FEF2F2] px-3.5 py-2.5 text-[13px] font-medium text-[#B91C1C]">
+          <AlertCircle className="size-4 shrink-0" />
+          {error}
+        </div>
+      )}
+
       <button
         type="submit"
-        className="mb-[18px] w-full rounded-[11px] bg-gold-400 py-3.5 text-[15px] font-bold text-white shadow-[0_4px_14px_rgba(224,163,62,0.28)] transition-colors hover:bg-gold-500"
+        className="mb-3.5 w-full rounded-[11px] bg-gold-400 py-3.5 text-[15px] font-bold text-white shadow-[0_4px_14px_rgba(224,163,62,0.28)] transition-colors hover:bg-gold-500"
       >
         Se connecter
       </button>
+
+      <div className="mb-[18px] rounded-[10px] border border-line bg-surface-warm px-3.5 py-2.5 text-[12px] leading-relaxed text-muted">
+        <span className="font-semibold text-ink">Démo :</span>{" "}
+        {DEMO_CREDENTIALS.email} · mot de passe {DEMO_CREDENTIALS.password}
+        <br />
+        (ou créez un compte via l&apos;inscription)
+      </div>
 
       <div className="mb-[18px] flex items-center gap-3">
         <span className="h-px flex-1 bg-line" />

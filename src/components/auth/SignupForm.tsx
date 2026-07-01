@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { User, Briefcase, Check, Eye, EyeOff, KeyRound } from "lucide-react";
 import {
   dashboardPathForRole,
+  registerAccount,
   saveDemoUser,
   type DemoRole,
 } from "@/lib/demo-store";
@@ -56,16 +57,17 @@ export function SignupForm() {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [showPwd, setShowPwd] = useState(false);
   const [accepted, setAccepted] = useState(false);
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    saveDemoUser({
-      name: `${firstName || "Utilisateur"} ${lastName}`.trim(),
-      email: email || "demo@akwaba.cm",
-      role,
-    });
+    const name = `${firstName || "Utilisateur"} ${lastName}`.trim();
+    const cleanEmail = email.trim() || "demo@akwaba.cm";
+    // Register the account so it can be used to log in afterwards.
+    registerAccount({ name, email: cleanEmail, password, role });
+    saveDemoUser({ name, email: cleanEmail, role });
     router.push(dashboardPathForRole(role));
   }
 
@@ -172,6 +174,8 @@ export function SignupForm() {
           <input
             type={showPwd ? "text" : "password"}
             className={`${inputClass} pr-10`}
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
             placeholder="Créez un mot de passe sécurisé"
             autoComplete="new-password"
             required

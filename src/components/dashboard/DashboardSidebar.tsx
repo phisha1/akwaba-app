@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
   LayoutDashboard,
   Home,
@@ -15,6 +16,7 @@ import {
 } from "lucide-react";
 import {
   readDemoUser,
+  clearDemoUser,
   ROLE_LABEL,
   type DemoUser,
 } from "@/lib/demo-store";
@@ -31,9 +33,15 @@ const NAV = [
 ];
 
 export function DashboardSidebar() {
+  const router = useRouter();
   const [user, setUser] = useState<DemoUser | null>(null);
   const name = user?.name ?? "Utilisateur Akwaba";
   const roleLabel = user ? ROLE_LABEL[user.role] : "Compte Akwaba";
+
+  function logout() {
+    clearDemoUser();
+    router.push("/");
+  }
 
   useEffect(() => {
     const id = window.setTimeout(() => {
@@ -100,13 +108,14 @@ export function DashboardSidebar() {
 
       {/* Logout */}
       <div className="border-t border-white/10 px-5 py-4">
-        <Link
-          href="/"
+        <button
+          type="button"
+          onClick={logout}
           className="flex items-center gap-2.5 py-2 text-[13px] font-medium text-white/45 transition-opacity hover:opacity-70"
         >
           <LogOut className="size-4" />
           Se déconnecter
-        </Link>
+        </button>
       </div>
     </aside>
   );

@@ -147,6 +147,57 @@ export function clearDemoUser() {
   window.localStorage.removeItem(USER_KEY);
 }
 
+/* ── Comptes de démonstration (auth front-only) ──────────────── */
+
+export interface DemoAccount extends DemoUser {
+  password: string;
+}
+
+const ACCOUNTS_KEY = "akwaba-accounts";
+
+/** Comptes fournis pour la démo — permettent de se connecter sans s'inscrire. */
+const SEED_ACCOUNTS: DemoAccount[] = [
+  { name: "Client Démo", email: "acheteur@akwaba.cm", password: "akwaba123", role: "acheteur" },
+  { name: "Awa Bello", email: "bailleur@akwaba.cm", password: "akwaba123", role: "particulier" },
+  { name: "Sonia Expert", email: "expert@akwaba.cm", password: "akwaba123", role: "expert" },
+  { name: "Jean-Pierre Mbida", email: "agent@akwaba.cm", password: "akwaba123", role: "agent" },
+  { name: "Admin Akwaba", email: "admin@akwaba.cm", password: "akwaba123", role: "admin" },
+];
+
+/** Identifiants affichés en aide sur la page de connexion. */
+export const DEMO_CREDENTIALS = { email: "agent@akwaba.cm", password: "akwaba123" };
+
+function readRegisteredAccounts(): DemoAccount[] {
+  if (!canUseStorage()) return [];
+  try {
+    const raw = window.localStorage.getItem(ACCOUNTS_KEY);
+    return raw ? (JSON.parse(raw) as DemoAccount[]) : [];
+  } catch {
+    return [];
+  }
+}
+
+/** Enregistre un compte à l'inscription (remplace un éventuel même e-mail). */
+export function registerAccount(account: DemoAccount) {
+  if (!canUseStorage()) return;
+  const list = readRegisteredAccounts().filter(
+    (a) => a.email.toLowerCase() !== account.email.trim().toLowerCase(),
+  );
+  list.push({ ...account, email: account.email.trim() });
+  window.localStorage.setItem(ACCOUNTS_KEY, JSON.stringify(list));
+}
+
+/** Valide les identifiants ; renvoie l'utilisateur ou null si incorrect. */
+export function authenticate(email: string, password: string): DemoUser | null {
+  const all = [...readRegisteredAccounts(), ...SEED_ACCOUNTS];
+  const match = all.find(
+    (a) =>
+      a.email.toLowerCase() === email.trim().toLowerCase() &&
+      a.password === password,
+  );
+  return match ? { name: match.name, email: match.email, role: match.role } : null;
+}
+
 export function readStoredProperties(): Property[] {
   if (!canUseStorage()) return [];
   try {
