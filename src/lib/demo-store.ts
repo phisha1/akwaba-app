@@ -1,4 +1,6 @@
 import type {
+  Offer,
+  OfferStatus,
   Property,
   PropertyStatus,
   Transaction,
@@ -52,73 +54,6 @@ export const ROLE_LABEL: Record<DemoRole, string> = {
   admin: "Admin",
 };
 
-/** What each profile can and cannot do — shown as a panel in the dashboard. */
-export const ROLE_CAPABILITIES: Record<
-  DemoRole,
-  { can: string[]; cannot: string[] }
-> = {
-  acheteur: {
-    can: [
-      "Rechercher et filtrer les biens (ville, type, prix)",
-      "Demander une visite et faire une offre",
-      "Lire les articles et suivre des formations",
-      "Poser des questions sur le forum",
-    ],
-    cannot: [
-      "Publier ou gérer des biens immobiliers",
-      "Créer des articles ou des formations",
-      "Modérer la plateforme",
-    ],
-  },
-  particulier: {
-    can: [
-      "Publier son propre bien (vente ou location)",
-      "Modifier et supprimer ses annonces",
-      "Changer le statut de son bien (disponible, réservé, vendu, loué)",
-      "Recevoir et gérer les demandes de visite",
-    ],
-    cannot: [
-      "Gérer un portefeuille comme un agent certifié",
-      "Créer des formations ou des articles d'expert",
-      "Administrer la plateforme",
-    ],
-  },
-  expert: {
-    can: [
-      "Publier des articles de conseil",
-      "Créer des formations (modules, durée, prix)",
-      "Répondre aux questions du forum",
-      "Consulter les biens et l'annuaire",
-    ],
-    cannot: [
-      "Publier des biens immobiliers",
-      "Gérer les visites et offres d'un agent",
-      "Modérer la plateforme",
-    ],
-  },
-  agent: {
-    can: [
-      "Publier des biens immobiliers",
-      "Modifier et supprimer ses annonces",
-      "Changer le statut (publié, réservé, vendu, loué)",
-      "Gérer les demandes de visite et les offres",
-    ],
-    cannot: [
-      "Créer des formations ou des articles d'expert",
-      "Administrer la plateforme et les rôles",
-    ],
-  },
-  admin: {
-    can: [
-      "Superviser utilisateurs, biens et contenus",
-      "Modérer annonces, articles et forum",
-      "Gérer les rôles et les abonnements",
-      "Configurer les filières et la cartographie",
-    ],
-    cannot: ["Accès complet — aucune restriction sur ce profil"],
-  },
-};
-
 function canUseStorage() {
   return typeof window !== "undefined" && Boolean(window.localStorage);
 }
@@ -166,6 +101,7 @@ const SEED_ACCOUNTS: DemoAccount[] = [
 
 /** Identifiants affichés en aide sur la page de connexion. */
 export const DEMO_CREDENTIALS = { email: "agent@akwaba.cm", password: "akwaba123" };
+export const ADMIN_CREDENTIALS = { email: "admin@akwaba.cm", password: "akwaba123" };
 
 function readRegisteredAccounts(): DemoAccount[] {
   if (!canUseStorage()) return [];
@@ -175,6 +111,16 @@ function readRegisteredAccounts(): DemoAccount[] {
   } catch {
     return [];
   }
+}
+
+export function readAllDemoAccounts(): DemoAccount[] {
+  const seen = new Set<string>();
+  return [...readRegisteredAccounts(), ...SEED_ACCOUNTS].filter((account) => {
+    const key = account.email.trim().toLowerCase();
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
 }
 
 /** Enregistre un compte à l'inscription (remplace un éventuel même e-mail). */
@@ -189,7 +135,7 @@ export function registerAccount(account: DemoAccount) {
 
 /** Valide les identifiants ; renvoie l'utilisateur ou null si incorrect. */
 export function authenticate(email: string, password: string): DemoUser | null {
-  const all = [...readRegisteredAccounts(), ...SEED_ACCOUNTS];
+  const all = readAllDemoAccounts();
   const match = all.find(
     (a) =>
       a.email.toLowerCase() === email.trim().toLowerCase() &&
@@ -465,4 +411,83 @@ export function saveVisit(draft: VisitDraft): Visit {
 
 export function setVisitStatus(id: string, status: VisitStatus) {
   writeVisits(readVisits().map((v) => (v.id === id ? { ...v, status } : v)));
+}
+
+/* ============================================================
+   Offers (buyer -> agent)
+   ============================================================ */
+
+const OFFERS_KEY = "akwaba-demo-offers";
+const OFFERS_SEEDED_KEY = "akwaba-demo-offers-seeded";
+
+export interface OfferDraft {
+  propertyId: string;
+  propertyTitle: string;
+  buyerName: string;
+  phone: string;
+  email?: string;
+  amount: number;
+  askingPrice: number;
+  message?: string;
+}
+
+const SEED_OFFERS: Offer[] = [
+  {
+    id: "seed-offer-1",
+    propertyId: "akw-001",
+    propertyTitle: "Villa contemporaine avec piscine",
+    buyerName: "Jean Fotso",
+    phone: "+237 6 96 30 44 12",
+    amount: 265_000_000,
+    askingPrice: 285_000_000,
+    message: "Offre ferme si les documents sont disponibles cette semaine.",
+    status: "attente",
+    createdAt: "2026-06-30",
+  },
+  {
+    id: "seed-offer-2",
+    propertyId: "akw-006",
+    propertyTitle: "Appartement standing résidence fermée",
+    buyerName: "Sophie Kenfack",
+    phone: "+237 6 71 20 31 90",
+    amount: 90_000_000,
+    askingPrice: 95_000_000,
+    status: "refusee",
+    createdAt: "2026-06-28",
+  },
+];
+
+export function readOffers(): Offer[] {
+  if (!canUseStorage()) return SEED_OFFERS;
+  try {
+    if (!window.localStorage.getItem(OFFERS_SEEDED_KEY)) {
+      window.localStorage.setItem(OFFERS_KEY, JSON.stringify(SEED_OFFERS));
+      window.localStorage.setItem(OFFERS_SEEDED_KEY, "1");
+      return SEED_OFFERS;
+    }
+    const raw = window.localStorage.getItem(OFFERS_KEY);
+    return raw ? (JSON.parse(raw) as Offer[]) : [];
+  } catch {
+    return SEED_OFFERS;
+  }
+}
+
+function writeOffers(offers: Offer[]) {
+  if (!canUseStorage()) return;
+  window.localStorage.setItem(OFFERS_KEY, JSON.stringify(offers));
+}
+
+export function saveOffer(draft: OfferDraft): Offer {
+  const offer: Offer = {
+    id: `offer-${Date.now()}`,
+    status: "attente",
+    createdAt: new Date().toISOString().slice(0, 10),
+    ...draft,
+  };
+  writeOffers([offer, ...readOffers()]);
+  return offer;
+}
+
+export function setOfferStatus(id: string, status: OfferStatus) {
+  writeOffers(readOffers().map((o) => (o.id === id ? { ...o, status } : o)));
 }

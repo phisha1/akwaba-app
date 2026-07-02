@@ -14,21 +14,21 @@ import {
   Trash2,
   ShieldCheck,
 } from "lucide-react";
-import type { Property, PropertyStatus, Visit } from "@/lib/types";
+import type { Offer, Property, PropertyStatus, Visit } from "@/lib/types";
 import {
   myProperties,
   readVisits,
+  readOffers,
   setPropertyStatus,
   deleteStoredPropertyById,
   requestVerification,
   setVisitStatus,
+  setOfferStatus,
   readDemoUser,
-  type DemoRole,
 } from "@/lib/demo-store";
-import { currentUser, offers } from "@/lib/mock/dashboard";
+import { currentUser } from "@/lib/mock/dashboard";
 import { STATUS_INFO, getVerification } from "@/lib/utils";
 import { VerificationBadge } from "@/components/property/VerificationBadge";
-import { RoleCapabilities } from "@/components/dashboard/RoleCapabilities";
 
 const STATUS_OPTIONS: { value: PropertyStatus; label: string }[] = [
   { value: "publie", label: "Publié" },
@@ -52,12 +52,13 @@ function priceLabel(p: Property) {
 export function AgentDashboard() {
   const [biens, setBiens] = useState<Property[]>([]);
   const [visits, setVisits] = useState<Visit[]>([]);
+  const [offerList, setOfferList] = useState<Offer[]>([]);
   const [userName, setUserName] = useState("Utilisateur Akwaba");
-  const [role, setRole] = useState<DemoRole>("agent");
 
   const refresh = useCallback(() => {
     setBiens(myProperties());
     setVisits(readVisits());
+    setOfferList(readOffers());
   }, []);
 
   useEffect(() => {
@@ -65,7 +66,6 @@ export function AgentDashboard() {
       refresh();
       const u = readDemoUser();
       if (u?.name) setUserName(u.name);
-      if (u?.role === "particulier" || u?.role === "agent") setRole(u.role);
     }, 0);
 
     return () => window.clearTimeout(id);
@@ -73,12 +73,13 @@ export function AgentDashboard() {
 
   const activeCount = biens.filter((b) => b.status === "publie").length;
   const pendingVisits = visits.filter((v) => v.status === "attente").length;
+  const pendingOffers = offerList.filter((o) => o.status === "attente").length;
   const totalViews = biens.reduce((sum, b) => sum + (b.views ?? 0), 0);
 
   const kpis = [
     { key: "biens", icon: Home, value: String(biens.length), label: "Biens actifs", badge: `${activeCount} publiés`, iconBg: "#EEF6F8", iconColor: "#0E4D5C", badgeBg: "#E6F4EC", badgeColor: "#1E7A4A" },
     { key: "visites", icon: CalendarDays, value: String(pendingVisits), label: "Visites en attente", badge: "À confirmer", iconBg: "#FEF3C7", iconColor: "#B45309", badgeBg: "#FEF3C7", badgeColor: "#B45309" },
-    { key: "offres", icon: Mail, value: String(offers.length), label: "Offres reçues", badge: "Nouvelles", iconBg: "#E6F4EC", iconColor: "#1E7A4A", badgeBg: "#E6F4EC", badgeColor: "#1E7A4A" },
+    { key: "offres", icon: Mail, value: String(offerList.length), label: "Offres reçues", badge: `${pendingOffers} à traiter`, iconBg: "#E6F4EC", iconColor: "#1E7A4A", badgeBg: "#E6F4EC", badgeColor: "#1E7A4A" },
     { key: "vues", icon: Eye, value: totalViews.toLocaleString("fr-FR"), label: "Vues cumulées", badge: "+23% vs mois dernier", iconBg: "#EDE9FE", iconColor: "#6D28D9", badgeBg: "#EDE9FE", badgeColor: "#6D28D9" },
   ];
 
@@ -101,6 +102,11 @@ export function AgentDashboard() {
 
   function handleVisit(id: string, status: "confirmee" | "refusee") {
     setVisitStatus(id, status);
+    refresh();
+  }
+
+  function handleOffer(id: string, status: "acceptee" | "refusee") {
+    setOfferStatus(id, status);
     refresh();
   }
 
@@ -301,43 +307,87 @@ export function AgentDashboard() {
           )}
         </div>
 
-        {/* Offers (statique) */}
+        {/* Offers */}
         <div className="overflow-hidden rounded-2xl border border-line bg-white">
           <div className="flex items-center justify-between border-b border-line px-[18px] py-3.5">
             <h2 className="text-[15px] font-bold text-ink">Offres reçues</h2>
             <span className="rounded-md bg-[#E6F4EC] px-2.5 py-1 text-xs font-bold text-[#1E7A4A]">
-              {offers.length} nouvelles
+              {pendingOffers} à traiter
             </span>
           </div>
-          {offers.map((o) => (
-            <div key={o.name} className="border-b border-[#F3F4F6] px-[18px] py-3.5 last:border-0">
-              <div className="mb-2.5 flex items-center gap-3">
-                <span className="grid size-9 shrink-0 place-items-center rounded-[10px] text-[13px] font-bold text-white" style={{ background: o.gradient }}>
-                  {o.initials}
-                </span>
-                <div className="min-w-0 flex-1">
-                  <div className="text-[13px] font-semibold text-ink">{o.name}</div>
-                  <div className="truncate text-xs text-faint">{o.detail}</div>
-                </div>
-              </div>
-              <div className="flex items-center justify-between">
-                <div>
-                  <span className={`text-[15px] font-extrabold ${o.status === "refusee" ? "text-faint line-through" : "text-brand-500"}`}>
-                    {o.amount}
-                  </span>
-                  <span className="ml-1.5 text-xs text-faint">{o.ask}</span>
-                </div>
-              </div>
+          {offerList.length === 0 ? (
+            <div className="px-[18px] py-8 text-center text-sm text-muted">
+              Aucune offre pour l&apos;instant.
             </div>
-          ))}
+          ) : (
+            offerList.map((o) => (
+              <div key={o.id} className="border-b border-[#F3F4F6] px-[18px] py-3.5 last:border-0">
+                <div className="mb-2.5 flex items-center gap-3">
+                  <span
+                    className="grid size-9 shrink-0 place-items-center rounded-[10px] text-[13px] font-bold text-white"
+                    style={{ background: "linear-gradient(135deg,#4a2a04,#926020)" }}
+                  >
+                    {initials(o.buyerName)}
+                  </span>
+                  <div className="min-w-0 flex-1">
+                    <div className="text-[13px] font-semibold text-ink">{o.buyerName}</div>
+                    <div className="truncate text-xs text-faint">
+                      {o.propertyTitle} · {formatDate(o.createdAt)}
+                    </div>
+                  </div>
+                  {o.status === "attente" ? (
+                    <div className="flex shrink-0 gap-1.5">
+                      <button onClick={() => handleOffer(o.id, "acceptee")} aria-label="Accepter" className="grid size-7 place-items-center rounded-md bg-[#E6F4EC] text-[#1E7A4A] hover:brightness-95">
+                        <Check className="size-3.5" />
+                      </button>
+                      <button onClick={() => handleOffer(o.id, "refusee")} aria-label="Refuser" className="grid size-7 place-items-center rounded-md bg-[#FEE2E2] text-[#B91C1C] hover:brightness-95">
+                        <X className="size-3.5" />
+                      </button>
+                    </div>
+                  ) : (
+                    <span
+                      className="shrink-0 whitespace-nowrap rounded-[5px] px-2 py-0.5 text-[10px] font-semibold"
+                      style={
+                        o.status === "acceptee"
+                          ? { background: "#E6F4EC", color: "#1E7A4A" }
+                          : { background: "#F3F4F6", color: "#6B7280" }
+                      }
+                    >
+                      {o.status === "acceptee" ? "Acceptée" : "Refusée"}
+                    </span>
+                  )}
+                </div>
+                <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
+                  <span className={`text-[15px] font-extrabold ${o.status === "refusee" ? "text-faint line-through" : "text-brand-500"}`}>
+                    {formatMoney(o.amount)}
+                  </span>
+                  <span className="text-xs text-faint">
+                    vs {formatMoney(o.askingPrice)} demandé
+                  </span>
+                </div>
+                {o.message && (
+                  <p className="mt-2 line-clamp-2 text-xs leading-relaxed text-muted">
+                    {o.message}
+                  </p>
+                )}
+              </div>
+            ))
+          )}
         </div>
-      </div>
-
-      <div className="mt-5">
-        <RoleCapabilities role={role} />
       </div>
     </div>
   );
+}
+
+function formatMoney(amount: number): string {
+  return `${new Intl.NumberFormat("fr-FR").format(amount)} FCFA`;
+}
+
+function formatDate(value: string): string {
+  return new Intl.DateTimeFormat("fr-FR", {
+    day: "2-digit",
+    month: "short",
+  }).format(new Date(value));
 }
 
 function initials(name: string): string {

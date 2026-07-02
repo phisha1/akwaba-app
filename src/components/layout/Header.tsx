@@ -48,8 +48,11 @@ export function Header() {
 
   // Close menus when the route changes.
   useEffect(() => {
-    setAcad(false);
-    setOpen(false);
+    const id = window.setTimeout(() => {
+      setAcad(false);
+      setOpen(false);
+    }, 0);
+    return () => window.clearTimeout(id);
   }, [pathname]);
 
   // Close the Académie dropdown on outside click.
@@ -93,15 +96,25 @@ export function Header() {
 
             <span className="h-4 w-px bg-line" />
 
-            <div className="relative" ref={acadRef}>
-              <button
-                type="button"
-                onClick={() => setAcad((v) => !v)}
-                aria-expanded={acad}
-                className="flex items-center gap-1.5 text-sm font-medium text-ink transition-colors hover:text-brand-500"
+            <div className="relative flex items-center gap-1.5" ref={acadRef}>
+              <Link
+                href="/academie"
+                className={`flex items-center gap-1.5 text-sm font-medium transition-colors ${
+                  pathname === "/academie"
+                    ? "text-brand-500"
+                    : "text-ink hover:text-brand-500"
+                }`}
               >
                 <GraduationCap className="size-4 text-brand-500" />
                 Académie
+              </Link>
+              <button
+                type="button"
+                onClick={() => setAcad((v) => !v)}
+                aria-label="Ouvrir le menu Académie"
+                aria-expanded={acad}
+                className="grid size-7 place-items-center rounded-md text-faint transition-colors hover:bg-surface-warm hover:text-brand-500"
+              >
                 <ChevronDown
                   className={`size-3.5 text-faint transition-transform ${acad ? "rotate-180" : ""}`}
                 />
@@ -201,6 +214,9 @@ export function Header() {
           ))}
 
           <Section label="Académie" />
+          <MobileLink href="/academie" onClick={() => setOpen(false)}>
+            Accueil Académie
+          </MobileLink>
           {NAV_ACADEMY.map((item) => (
             <MobileLink key={item.label} href={item.href} onClick={() => setOpen(false)}>
               {item.label}

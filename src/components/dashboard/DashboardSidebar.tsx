@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
   LayoutDashboard,
   Home,
@@ -23,7 +23,7 @@ import {
 import { initials } from "@/lib/utils";
 
 const NAV = [
-  { icon: LayoutDashboard, label: "Tableau de bord", href: "/tableau-de-bord", active: true },
+  { icon: LayoutDashboard, label: "Tableau de bord", href: "/tableau-de-bord" },
   { icon: Home, label: "Publier un bien", href: "/tableau-de-bord/biens/nouveau", badge: "+", badgeStyle: "bg-white/15 text-white" },
   { icon: BookOpen, label: "Articles experts", href: "/tableau-de-bord/articles/nouveau" },
   { icon: PenLine, label: "Formations", href: "/tableau-de-bord/expert" },
@@ -32,11 +32,21 @@ const NAV = [
   { icon: User, label: "Mon profil", href: "#" },
 ];
 
+const ADMIN_NAV = [
+  { icon: LayoutDashboard, label: "Vue globale", href: "/tableau-de-bord/admin" },
+  { icon: Home, label: "Tous les biens", href: "/recherche" },
+  { icon: BookOpen, label: "Académie", href: "/academie" },
+  { icon: CalendarDays, label: "Visites", href: "/tableau-de-bord", badge: "3", badgeStyle: "bg-gold-400 text-white" },
+  { icon: Mail, label: "Offres", href: "/tableau-de-bord", badge: "2", badgeStyle: "bg-[#4DE8A0] text-[#0a3d2a]" },
+];
+
 export function DashboardSidebar() {
   const router = useRouter();
+  const pathname = usePathname();
   const [user, setUser] = useState<DemoUser | null>(null);
   const name = user?.name ?? "Utilisateur Akwaba";
   const roleLabel = user ? ROLE_LABEL[user.role] : "Compte Akwaba";
+  const nav = user?.role === "admin" ? ADMIN_NAV : NAV;
 
   function logout() {
     clearDemoUser();
@@ -81,18 +91,20 @@ export function DashboardSidebar() {
 
       {/* Nav */}
       <nav className="flex-1 py-2">
-        {NAV.map((item) => (
+        {nav.map((item) => {
+          const active = isActive(pathname, item.href);
+          return (
           <Link
             key={item.label}
             href={item.href}
             className={`flex items-center gap-3 px-5 py-3 text-sm transition-colors ${
-              item.active
+              active
                 ? "border-l-[3px] border-gold-400 bg-white/10 font-semibold text-white"
                 : "font-medium text-white/70 hover:bg-white/[0.08]"
             }`}
           >
             <item.icon
-              className={`size-[17px] ${item.active ? "text-gold-400" : "text-white/60"}`}
+              className={`size-[17px] ${active ? "text-gold-400" : "text-white/60"}`}
             />
             <span>{item.label}</span>
             {item.badge && (
@@ -103,7 +115,8 @@ export function DashboardSidebar() {
               </span>
             )}
           </Link>
-        ))}
+          );
+        })}
       </nav>
 
       {/* Logout */}
@@ -119,4 +132,10 @@ export function DashboardSidebar() {
       </div>
     </aside>
   );
+}
+
+function isActive(pathname: string, href: string) {
+  if (href === "#") return false;
+  if (href === "/tableau-de-bord") return pathname === href;
+  return pathname === href || pathname.startsWith(`${href}/`);
 }

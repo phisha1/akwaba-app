@@ -13,7 +13,6 @@ import {
   Users,
 } from "lucide-react";
 import { readDemoUser, ROLE_LABEL, type DemoRole } from "@/lib/demo-store";
-import { RoleCapabilities } from "@/components/dashboard/RoleCapabilities";
 
 const CONFIG: Record<
   DemoRole,
@@ -47,6 +46,7 @@ const CONFIG: Record<
     title: "Dashboard expert",
     desc: "Un espace pour publier des conseils, créer des formations, planifier une roadmap et répondre à la communauté.",
     actions: [
+      { href: "/academie", label: "Accueil Académie", desc: "Articles, formations, filières, forum", icon: BookOpen },
       { href: "/tableau-de-bord/articles/nouveau", label: "Nouvel article", desc: "Créer un guide expert", icon: PenLine },
       { href: "/tableau-de-bord/formations/nouveau", label: "Nouvelle formation", desc: "Modules, durée, prix", icon: GraduationCap },
       { href: "/forum", label: "Répondre au forum", desc: "Questions de la communauté", icon: MessageCircle },
@@ -112,10 +112,6 @@ export function RoleDashboard({ role }: { role: DemoRole }) {
             <div className="mt-1 text-sm text-muted">{action.desc}</div>
           </Link>
         ))}
-      </div>
-
-      <div className="mt-4">
-        <RoleCapabilities role={role} />
       </div>
     </div>
   );

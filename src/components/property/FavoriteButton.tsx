@@ -17,7 +17,10 @@ export function FavoriteButton({
   const [fav, setFav] = useState(false);
 
   useEffect(() => {
-    setFav(isFavorite(propertyId));
+    const id = window.setTimeout(() => {
+      setFav(isFavorite(propertyId));
+    }, 0);
+    return () => window.clearTimeout(id);
   }, [propertyId]);
 
   return (

@@ -6,7 +6,6 @@ import { Heart, Search, BookOpen, MessageCircle } from "lucide-react";
 import type { Property } from "@/lib/types";
 import { favoriteProperties, readDemoUser } from "@/lib/demo-store";
 import { PropertyCard } from "@/components/property/PropertyCard";
-import { RoleCapabilities } from "@/components/dashboard/RoleCapabilities";
 
 export function AcheteurDashboard() {
   const [favs, setFavs] = useState<Property[]>([]);
@@ -67,8 +66,6 @@ export function AcheteurDashboard() {
           </div>
         )}
       </div>
-
-      <RoleCapabilities role="acheteur" />
     </div>
   );
 }

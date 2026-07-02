@@ -14,7 +14,6 @@ import {
   ShieldCheck,
   ShieldAlert,
   Clock,
-  Mail,
   Phone,
   MessageSquare,
   Info,
@@ -35,6 +34,7 @@ import { CITY_CENTERS, haversineKm, formatDistance } from "@/lib/geo";
 import { DetailMapLoader } from "@/components/property/DetailMapLoader";
 import { FavoriteButton } from "@/components/property/FavoriteButton";
 import { RequestVisitButton } from "@/components/property/RequestVisitButton";
+import { MakeOfferButton } from "@/components/property/MakeOfferButton";
 
 export function generateStaticParams() {
   return properties.map((p) => ({ id: p.id }));
@@ -360,10 +360,11 @@ export default async function FichePage({
               propertyId={property.id}
               propertyTitle={property.title}
             />
-            <button className="flex w-full items-center justify-center gap-2.5 rounded-xl border-2 border-brand-500 py-[13px] text-[15px] font-bold text-brand-500 transition-colors hover:bg-brand-50">
-              <Mail className="size-[17px]" />
-              Faire une offre
-            </button>
+            <MakeOfferButton
+              propertyId={property.id}
+              propertyTitle={property.title}
+              askingPrice={property.price}
+            />
             <p className="mt-3.5 text-center text-xs leading-relaxed text-[#C4C9D0]">
               Réf. {property.id.toUpperCase()} · Sans commission acheteur
             </p>

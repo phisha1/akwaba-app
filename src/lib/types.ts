@@ -65,6 +65,23 @@ export interface Visit {
   createdAt: string;
 }
 
+export type OfferStatus = "attente" | "acceptee" | "refusee";
+
+/** A purchase or rental offer left from a listing, seen by the agent/admin. */
+export interface Offer {
+  id: string;
+  propertyId: string;
+  propertyTitle: string;
+  buyerName: string;
+  phone: string;
+  email?: string;
+  amount: number;
+  askingPrice: number;
+  message?: string;
+  status: OfferStatus;
+  createdAt: string;
+}
+
 export type ActorRole =
   | "agence"
   | "agent"
