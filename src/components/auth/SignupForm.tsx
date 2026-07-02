@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Home, KeyRound, Search, Check, Eye, EyeOff } from "lucide-react";
+import { GraduationCap, Home, KeyRound, Search, Check, Eye, EyeOff } from "lucide-react";
 import {
   dashboardPathForRole,
   registerAccount,
@@ -13,7 +13,7 @@ import {
 
 type Role = Extract<
   DemoRole,
-  "acheteur" | "locataire" | "particulier"
+  "acheteur" | "locataire" | "apprenant" | "particulier"
 >;
 
 const ROLES: {
@@ -33,6 +33,12 @@ const ROLES: {
     icon: Home,
     title: "Je veux louer",
     desc: "Je consulte les biens à louer et je peux demander une visite.",
+  },
+  {
+    value: "apprenant",
+    icon: GraduationCap,
+    title: "Je veux aller à l'Académie",
+    desc: "Je veux lire les articles, suivre les formations et participer au forum.",
   },
   {
     value: "particulier",

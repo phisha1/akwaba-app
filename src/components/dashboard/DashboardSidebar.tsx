@@ -58,6 +58,13 @@ const NAV_BY_ROLE: Record<Exclude<DemoRole, "admin">, NavItem[]> = {
     { icon: BookOpen, label: "Académie", href: "/academie" },
     { icon: User, label: "Mon profil", href: "/tableau-de-bord/profil" },
   ],
+  apprenant: [
+    { icon: GraduationCap, label: "Académie", href: "/academie" },
+    { icon: BookOpen, label: "Articles", href: "/articles" },
+    { icon: GraduationCap, label: "Formations", href: "/formations" },
+    { icon: MessageCircle, label: "Forum", href: "/forum" },
+    { icon: User, label: "Mon profil", href: "/tableau-de-bord/profil" },
+  ],
   particulier: [
     { icon: LayoutDashboard, label: "Mes annonces", href: "/tableau-de-bord" },
     { icon: Home, label: "Publier mon bien", href: "/tableau-de-bord/biens/nouveau", badge: "+", badgeStyle: "bg-white/15 text-white" },

@@ -42,6 +42,16 @@ const CONFIG: Record<
       { href: "/forum", label: "Mes questions", desc: "Forum et réponses utiles", icon: MessageCircle },
     ],
   },
+  apprenant: {
+    title: "Espace Académie",
+    desc: "Un accès direct aux articles, formations, filières et discussions pour apprendre avant d'agir.",
+    actions: [
+      { href: "/academie", label: "Accueil Académie", desc: "Tous les contenus au même endroit", icon: GraduationCap },
+      { href: "/articles", label: "Articles", desc: "Guides et conseils pratiques", icon: FileText },
+      { href: "/formations", label: "Formations", desc: "Parcours structurés", icon: BookOpen },
+      { href: "/forum", label: "Forum", desc: "Questions et réponses", icon: MessageCircle },
+    ],
+  },
   particulier: {
     title: "Espace bailleur",
     desc: "Publiez votre bien, suivez les demandes de visite et gérez vos annonces.",

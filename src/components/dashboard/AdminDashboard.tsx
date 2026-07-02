@@ -29,7 +29,15 @@ import { getVerification } from "@/lib/utils";
 import { actors } from "@/lib/mock/actors";
 import { articles, filieres, formations, forumQuestions } from "@/lib/mock/learning";
 
-const ROLE_ORDER: DemoRole[] = ["acheteur", "locataire", "particulier", "agent", "expert", "admin"];
+const ROLE_ORDER: DemoRole[] = [
+  "acheteur",
+  "locataire",
+  "apprenant",
+  "particulier",
+  "agent",
+  "expert",
+  "admin",
+];
 
 export function AdminDashboard() {
   const [accounts, setAccounts] = useState<DemoAccount[]>([]);

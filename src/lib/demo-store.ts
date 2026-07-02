@@ -13,6 +13,7 @@ import { properties as mockProperties } from "@/lib/mock/properties";
 export type DemoRole =
   | "acheteur"
   | "locataire"
+  | "apprenant"
   | "particulier"
   | "expert"
   | "agent"
@@ -42,6 +43,7 @@ const PROPERTIES_KEY = "akwaba-demo-properties";
 export const ROLE_DASHBOARD_PATH: Record<DemoRole, string> = {
   acheteur: "/tableau-de-bord/acheteur",
   locataire: "/tableau-de-bord/acheteur",
+  apprenant: "/academie",
   particulier: "/tableau-de-bord",
   expert: "/tableau-de-bord/expert",
   agent: "/tableau-de-bord",
@@ -51,6 +53,7 @@ export const ROLE_DASHBOARD_PATH: Record<DemoRole, string> = {
 export const ROLE_LABEL: Record<DemoRole, string> = {
   acheteur: "Je cherche un bien",
   locataire: "Je cherche à louer",
+  apprenant: "Je viens apprendre",
   particulier: "Je publie mon bien",
   expert: "Expert / Formateur",
   agent: "Agent / Propriétaire",
@@ -97,6 +100,7 @@ const ACCOUNTS_KEY = "akwaba-accounts";
 const SEED_ACCOUNTS: DemoAccount[] = [
   { name: "Client Démo", email: "acheteur@akwaba.cm", password: "akwaba123", role: "acheteur" },
   { name: "Locataire Démo", email: "locataire@akwaba.cm", password: "akwaba123", role: "locataire" },
+  { name: "Apprenant Démo", email: "academie@akwaba.cm", password: "akwaba123", role: "apprenant" },
   { name: "Awa Bello", email: "bailleur@akwaba.cm", password: "akwaba123", role: "particulier" },
   { name: "Sonia Expert", email: "expert@akwaba.cm", password: "akwaba123", role: "expert" },
   { name: "Jean-Pierre Mbida", email: "agent@akwaba.cm", password: "akwaba123", role: "agent" },
