@@ -8,8 +8,6 @@ import {
   authenticate,
   dashboardPathForRole,
   saveDemoUser,
-  DEMO_CREDENTIALS,
-  ADMIN_CREDENTIALS,
 } from "@/lib/demo-store";
 
 export function LoginForm() {
@@ -105,13 +103,8 @@ export function LoginForm() {
       </button>
 
       <div className="mb-[18px] rounded-[10px] border border-line bg-surface-warm px-3.5 py-2.5 text-[12px] leading-relaxed text-muted">
-        <span className="font-semibold text-ink">Démo agent :</span>{" "}
-        {DEMO_CREDENTIALS.email} · mot de passe {DEMO_CREDENTIALS.password}
-        <br />
-        <span className="font-semibold text-ink">Admin :</span>{" "}
-        {ADMIN_CREDENTIALS.email} · mot de passe {ADMIN_CREDENTIALS.password}
-        <br />
-        (ou créez un compte via l&apos;inscription)
+        Une seule connexion pour tous les comptes. L&apos;espace affiché dépend
+        simplement du profil enregistré sur le compte.
       </div>
 
       <div className="mb-[18px] flex items-center gap-3">

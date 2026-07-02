@@ -37,9 +37,10 @@ const RADII = [5, 10, 20, 50];
 
 export function SearchView() {
   const params = useSearchParams();
+  const paramsKey = params.toString();
 
   const [transaction, setTransaction] = useState<Transaction>(
-    (params.get("transaction") as Transaction) || "vente",
+    transactionFromParam(params.get("transaction")),
   );
   const [ville, setVille] = useState(params.get("ville") || "Yaoundé");
   const [type, setType] = useState(params.get("type") || "Tous les types");
@@ -49,6 +50,18 @@ export function SearchView() {
   const [priceMin, setPriceMin] = useState<number | undefined>(undefined);
   const [priceMax, setPriceMax] = useState<number | undefined>(undefined);
   const [allProperties, setAllProperties] = useState<Property[]>(properties);
+
+  useEffect(() => {
+    const id = window.setTimeout(() => {
+      const next = new URLSearchParams(paramsKey);
+      setTransaction(transactionFromParam(next.get("transaction")));
+      setVille(next.get("ville") || "Yaoundé");
+      setType(next.get("type") || "Tous les types");
+      setRadiusKm(Number(next.get("rayon")) || 10);
+    }, 0);
+
+    return () => window.clearTimeout(id);
+  }, [paramsKey]);
 
   useEffect(() => {
     const id = window.setTimeout(() => {
@@ -211,6 +224,10 @@ export function SearchView() {
       </button>
     </div>
   );
+}
+
+function transactionFromParam(value: string | null): Transaction {
+  return value === "location" ? "location" : "vente";
 }
 
 function Divider() {

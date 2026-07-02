@@ -16,8 +16,8 @@ import {
 
 // Pilier 1 — Immobilier (la place de marché)
 const NAV_MARKET = [
-  { href: "/recherche", label: "Acheter" },
-  { href: "/recherche?transaction=location", label: "Louer" },
+  { href: "/recherche?transaction=vente", label: "Acheter", transaction: "vente" },
+  { href: "/recherche?transaction=location", label: "Louer", transaction: "location" },
 ];
 
 // Pilier 2 — Académie (contenus & communauté)
@@ -35,6 +35,7 @@ export function Header() {
   const [acad, setAcad] = useState(false); // menu déroulant Académie (desktop)
   const [user, setUser] = useState<DemoUser | null>(null);
   const [ready, setReady] = useState(false);
+  const [navTransaction, setNavTransaction] = useState("vente");
   const acadRef = useRef<HTMLDivElement>(null);
 
   // Re-read the session on every navigation so the header stays in sync.
@@ -42,6 +43,8 @@ export function Header() {
     const id = window.setTimeout(() => {
       setUser(readDemoUser());
       setReady(true);
+      const query = new URLSearchParams(window.location.search);
+      setNavTransaction(query.get("transaction") === "location" ? "location" : "vente");
     }, 0);
     return () => window.clearTimeout(id);
   }, [pathname]);
@@ -84,8 +87,9 @@ export function Header() {
               <Link
                 key={item.label}
                 href={item.href}
+                onClick={() => setNavTransaction(item.transaction)}
                 className={`text-sm font-medium transition-colors ${
-                  pathname === item.href.split("?")[0]
+                  pathname === "/recherche" && navTransaction === item.transaction
                     ? "text-brand-500"
                     : "text-ink hover:text-brand-500"
                 }`}
