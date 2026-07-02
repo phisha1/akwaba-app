@@ -1,8 +1,10 @@
 "use client";
 
 import { useState } from "react";
+import { createPortal } from "react-dom";
+import { useRouter } from "next/navigation";
 import { Calendar, X, CheckCircle2 } from "lucide-react";
-import { saveVisit } from "@/lib/demo-store";
+import { readDemoUser, saveVisit } from "@/lib/demo-store";
 
 export function RequestVisitButton({
   propertyId,
@@ -11,8 +13,10 @@ export function RequestVisitButton({
   propertyId: string;
   propertyTitle: string;
 }) {
+  const router = useRouter();
   const [open, setOpen] = useState(false);
   const [sent, setSent] = useState(false);
+  const [blocked, setBlocked] = useState("");
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [date, setDate] = useState("");
@@ -24,13 +28,30 @@ export function RequestVisitButton({
     window.setTimeout(() => setSent(false), 200);
   }
 
+  function openForm() {
+    const user = readDemoUser();
+    if (!user) {
+      router.push(`/connexion?next=${encodeURIComponent(window.location.pathname)}`);
+      return;
+    }
+    if (user.role !== "acheteur" && user.role !== "locataire") {
+      setBlocked("Cette action est réservée au compte acheteur / locataire.");
+      return;
+    }
+    if (!name) setName(user.name);
+    setBlocked("");
+    setOpen(true);
+  }
+
   function submit(e: React.FormEvent) {
     e.preventDefault();
+    const user = readDemoUser();
     saveVisit({
       propertyId,
       propertyTitle,
       visitorName: name,
       phone: `+237 ${phone}`.trim(),
+      email: user?.email,
       preferredDate: date,
       message,
     });
@@ -41,16 +62,25 @@ export function RequestVisitButton({
     <>
       <button
         type="button"
-        onClick={() => setOpen(true)}
+        onClick={openForm}
         className="mb-2.5 flex w-full items-center justify-center gap-2.5 rounded-xl bg-gold-400 py-[15px] text-[15px] font-bold text-white shadow-[0_4px_14px_rgba(224,163,62,0.32)] transition-colors hover:bg-gold-500"
       >
         <Calendar className="size-[17px]" />
         Demander une visite
       </button>
+      {blocked && (
+        <p className="mb-2.5 rounded-lg bg-surface-cool px-3 py-2 text-center text-xs font-medium text-muted">
+          {blocked}
+        </p>
+      )}
 
-      {open && (
+      {open &&
+        typeof document !== "undefined" &&
+        createPortal(
+          (
         <div
-          className="fixed inset-0 z-[2000] flex items-center justify-center bg-black/40 p-4"
+          className="fixed inset-0 z-[4000] flex items-center justify-center bg-black/40 p-4"
+          style={{ zIndex: 9999 }}
           onClick={close}
         >
           <div
@@ -145,7 +175,9 @@ export function RequestVisitButton({
             )}
           </div>
         </div>
-      )}
+          ),
+          document.body,
+        )}
     </>
   );
 }

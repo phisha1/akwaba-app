@@ -29,7 +29,7 @@ import { getVerification } from "@/lib/utils";
 import { actors } from "@/lib/mock/actors";
 import { articles, filieres, formations, forumQuestions } from "@/lib/mock/learning";
 
-const ROLE_ORDER: DemoRole[] = ["acheteur", "particulier", "agent", "expert", "admin"];
+const ROLE_ORDER: DemoRole[] = ["acheteur", "locataire", "particulier", "agent", "expert", "admin"];
 
 export function AdminDashboard() {
   const [accounts, setAccounts] = useState<DemoAccount[]>([]);
@@ -116,14 +116,14 @@ export function AdminDashboard() {
       value: pendingVisits,
       desc: "Demandes à confirmer ou refuser",
       icon: CalendarDays,
-      href: "/tableau-de-bord",
+      href: "/tableau-de-bord/admin#visites",
     },
     {
       label: "Offres en attente",
       value: pendingOffers,
       desc: "Offres acheteurs à traiter",
       icon: Mail,
-      href: "/tableau-de-bord",
+      href: "/tableau-de-bord/admin#offres",
     },
     {
       label: "Forum non résolu",
@@ -269,12 +269,84 @@ export function AdminDashboard() {
             ["Offres", String(offers.length)],
             ["Demandes en attente", String(pendingVisits + pendingOffers)],
           ]}
-          href="/tableau-de-bord"
+          href="/tableau-de-bord/admin#visites"
         />
+      </div>
+
+      <div className="mt-4 grid gap-4 lg:grid-cols-2">
+        <section
+          id="visites"
+          className="scroll-mt-24 overflow-hidden rounded-2xl border border-line bg-white"
+        >
+          <div className="border-b border-line px-5 py-4">
+            <h2 className="text-base font-bold text-ink">Visites à superviser</h2>
+            <p className="mt-1 text-xs text-muted">
+              Toutes les demandes de visite visibles par l&apos;administration.
+            </p>
+          </div>
+          <div>
+            {visits.length ? (
+              visits.map((visit) => (
+                <AdminRequestRow
+                  key={visit.id}
+                  href={`/annonces/${visit.propertyId}`}
+                  title={visit.propertyTitle}
+                  primary={visit.visitorName}
+                  meta={visit.preferredDate ?? visit.createdAt}
+                  badge={VISIT_STATUS_LABEL[visit.status]}
+                  detail={visit.phone}
+                />
+              ))
+            ) : (
+              <EmptyRow label="Aucune visite enregistrée." />
+            )}
+          </div>
+        </section>
+
+        <section
+          id="offres"
+          className="scroll-mt-24 overflow-hidden rounded-2xl border border-line bg-white"
+        >
+          <div className="border-b border-line px-5 py-4">
+            <h2 className="text-base font-bold text-ink">Offres à superviser</h2>
+            <p className="mt-1 text-xs text-muted">
+              Propositions reçues sur les biens à vendre ou à louer.
+            </p>
+          </div>
+          <div>
+            {offers.length ? (
+              offers.map((offer) => (
+                <AdminRequestRow
+                  key={offer.id}
+                  href={`/annonces/${offer.propertyId}`}
+                  title={offer.propertyTitle}
+                  primary={offer.buyerName}
+                  meta={formatAdminMoney(offer.amount)}
+                  badge={OFFER_STATUS_LABEL[offer.status]}
+                  detail={offer.phone}
+                />
+              ))
+            ) : (
+              <EmptyRow label="Aucune offre enregistrée." />
+            )}
+          </div>
+        </section>
       </div>
     </div>
   );
 }
+
+const VISIT_STATUS_LABEL: Record<Visit["status"], string> = {
+  attente: "En attente",
+  confirmee: "Confirmée",
+  refusee: "Refusée",
+};
+
+const OFFER_STATUS_LABEL: Record<Offer["status"], string> = {
+  attente: "En attente",
+  acceptee: "Acceptée",
+  refusee: "Refusée",
+};
 
 function PillarPanel({
   icon: Icon,
@@ -304,4 +376,49 @@ function PillarPanel({
       </div>
     </Link>
   );
+}
+
+function AdminRequestRow({
+  href,
+  title,
+  primary,
+  meta,
+  badge,
+  detail,
+}: {
+  href: string;
+  title: string;
+  primary: string;
+  meta: string;
+  badge: string;
+  detail: string;
+}) {
+  return (
+    <Link
+      href={href}
+      className="flex items-center gap-4 border-b border-[#F3F4F6] px-5 py-4 last:border-0 hover:bg-surface-cool"
+    >
+      <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-brand-50 text-brand-500">
+        <FileText className="size-5" />
+      </span>
+      <span className="min-w-0 flex-1">
+        <span className="block truncate text-sm font-bold text-ink">{title}</span>
+        <span className="mt-0.5 block truncate text-xs text-muted">
+          {primary} · {detail}
+        </span>
+      </span>
+      <span className="hidden text-xs font-bold text-muted sm:block">{meta}</span>
+      <span className="rounded-md bg-surface-warm px-2 py-1 text-[11px] font-bold text-ink">
+        {badge}
+      </span>
+    </Link>
+  );
+}
+
+function EmptyRow({ label }: { label: string }) {
+  return <div className="px-5 py-5 text-sm text-muted">{label}</div>;
+}
+
+function formatAdminMoney(value: number) {
+  return `${new Intl.NumberFormat("fr-FR").format(value)} FCFA`;
 }

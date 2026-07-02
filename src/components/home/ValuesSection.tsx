@@ -35,8 +35,8 @@ export function ValuesSection() {
             </div>
             <h3 className="mb-2.5 text-lg font-bold text-white">Biens vérifiés</h3>
             <p className="text-sm leading-relaxed text-white/70">
-              Chaque annonce est validée par notre équipe. Photos authentiques,
-              informations exactes, agents certifiés.
+              Chaque annonce est structurée pour faciliter les vérifications :
+              photos utiles, informations exactes, acteurs identifiés.
             </p>
           </div>
 

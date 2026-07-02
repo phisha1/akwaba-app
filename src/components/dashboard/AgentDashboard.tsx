@@ -25,9 +25,9 @@ import {
   setVisitStatus,
   setOfferStatus,
   readDemoUser,
+  type DemoRole,
 } from "@/lib/demo-store";
-import { currentUser } from "@/lib/mock/dashboard";
-import { STATUS_INFO, getVerification } from "@/lib/utils";
+import { STATUS_INFO, getVerification, initials } from "@/lib/utils";
 import { VerificationBadge } from "@/components/property/VerificationBadge";
 
 const STATUS_OPTIONS: { value: PropertyStatus; label: string }[] = [
@@ -54,6 +54,7 @@ export function AgentDashboard() {
   const [visits, setVisits] = useState<Visit[]>([]);
   const [offerList, setOfferList] = useState<Offer[]>([]);
   const [userName, setUserName] = useState("Utilisateur Akwaba");
+  const [userRole, setUserRole] = useState<DemoRole>("particulier");
 
   const refresh = useCallback(() => {
     setBiens(myProperties());
@@ -66,6 +67,7 @@ export function AgentDashboard() {
       refresh();
       const u = readDemoUser();
       if (u?.name) setUserName(u.name);
+      if (u?.role) setUserRole(u.role);
     }, 0);
 
     return () => window.clearTimeout(id);
@@ -75,9 +77,15 @@ export function AgentDashboard() {
   const pendingVisits = visits.filter((v) => v.status === "attente").length;
   const pendingOffers = offerList.filter((o) => o.status === "attente").length;
   const totalViews = biens.reduce((sum, b) => sum + (b.views ?? 0), 0);
+  const isParticulier = userRole === "particulier";
+  const dashboardCity = biens[0]?.city ?? "Cameroun";
+  const mainTitle = isParticulier ? "Mes annonces" : "Portefeuille agent";
+  const publishLabel = isParticulier ? "Publier mon bien" : "Publier un bien";
+  const listingsTitle = isParticulier ? "Mes annonces publiées" : "Mes biens publiés";
+  const propertiesLabel = isParticulier ? "Annonces actives" : "Biens actifs";
 
   const kpis = [
-    { key: "biens", icon: Home, value: String(biens.length), label: "Biens actifs", badge: `${activeCount} publiés`, iconBg: "#EEF6F8", iconColor: "#0E4D5C", badgeBg: "#E6F4EC", badgeColor: "#1E7A4A" },
+    { key: "biens", icon: Home, value: String(biens.length), label: propertiesLabel, badge: `${activeCount} publiés`, iconBg: "#EEF6F8", iconColor: "#0E4D5C", badgeBg: "#E6F4EC", badgeColor: "#1E7A4A" },
     { key: "visites", icon: CalendarDays, value: String(pendingVisits), label: "Visites en attente", badge: "À confirmer", iconBg: "#FEF3C7", iconColor: "#B45309", badgeBg: "#FEF3C7", badgeColor: "#B45309" },
     { key: "offres", icon: Mail, value: String(offerList.length), label: "Offres reçues", badge: `${pendingOffers} à traiter`, iconBg: "#E6F4EC", iconColor: "#1E7A4A", badgeBg: "#E6F4EC", badgeColor: "#1E7A4A" },
     { key: "vues", icon: Eye, value: totalViews.toLocaleString("fr-FR"), label: "Vues cumulées", badge: "+23% vs mois dernier", iconBg: "#EDE9FE", iconColor: "#6D28D9", badgeBg: "#EDE9FE", badgeColor: "#6D28D9" },
@@ -115,11 +123,14 @@ export function AgentDashboard() {
       {/* Header */}
       <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
         <div>
+          <span className="mb-2 inline-flex rounded-md bg-brand-50 px-2.5 py-1 text-[11px] font-bold text-brand-500">
+            {mainTitle}
+          </span>
           <h1 className="text-2xl font-extrabold tracking-[-0.4px] text-ink">
             Bonjour {userName.split(" ")[0]} 👋
           </h1>
           <p className="mt-1 text-[13px] capitalize text-faint">
-            {today} · {currentUser.city}
+            {today} · {dashboardCity}
           </p>
         </div>
         <Link
@@ -127,7 +138,7 @@ export function AgentDashboard() {
           className="flex items-center gap-2 rounded-[10px] bg-gold-400 px-5 py-2.5 text-sm font-bold text-white shadow-[0_3px_10px_rgba(224,163,62,0.3)] transition-colors hover:bg-gold-500"
         >
           <PlusSquare className="size-4" />
-          Publier un bien
+          {publishLabel}
         </Link>
       </div>
 
@@ -152,9 +163,9 @@ export function AgentDashboard() {
       </div>
 
       {/* My listings */}
-      <div className="mb-5 overflow-hidden rounded-2xl border border-line bg-white">
+      <div id="annonces" className="mb-5 scroll-mt-24 overflow-hidden rounded-2xl border border-line bg-white">
         <div className="flex items-center justify-between border-b border-line px-5 py-4">
-          <h2 className="text-base font-bold text-ink">Mes biens publiés</h2>
+          <h2 className="text-base font-bold text-ink">{listingsTitle}</h2>
           <Link href="/recherche" className="text-[13px] font-semibold text-brand-500 hover:underline">
             Voir dans la recherche →
           </Link>
@@ -258,7 +269,7 @@ export function AgentDashboard() {
       {/* Visits + Offers */}
       <div className="grid gap-4 lg:grid-cols-2">
         {/* Visits */}
-        <div className="overflow-hidden rounded-2xl border border-line bg-white">
+        <div id="visites" className="scroll-mt-24 overflow-hidden rounded-2xl border border-line bg-white">
           <div className="flex items-center justify-between border-b border-line px-[18px] py-3.5">
             <h2 className="text-[15px] font-bold text-ink">Demandes de visite</h2>
             <span className="rounded-md bg-gold-100 px-2.5 py-1 text-xs font-bold text-gold-700">
@@ -308,7 +319,7 @@ export function AgentDashboard() {
         </div>
 
         {/* Offers */}
-        <div className="overflow-hidden rounded-2xl border border-line bg-white">
+        <div id="offres" className="scroll-mt-24 overflow-hidden rounded-2xl border border-line bg-white">
           <div className="flex items-center justify-between border-b border-line px-[18px] py-3.5">
             <h2 className="text-[15px] font-bold text-ink">Offres reçues</h2>
             <span className="rounded-md bg-[#E6F4EC] px-2.5 py-1 text-xs font-bold text-[#1E7A4A]">
@@ -388,10 +399,4 @@ function formatDate(value: string): string {
     day: "2-digit",
     month: "short",
   }).format(new Date(value));
-}
-
-function initials(name: string): string {
-  const parts = name.trim().split(/\s+/);
-  if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
-  return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
 }

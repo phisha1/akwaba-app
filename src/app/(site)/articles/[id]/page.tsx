@@ -87,9 +87,9 @@ export default async function ArticleDetailPage({
               <li>Faire intervenir un professionnel quand le dossier est sensible.</li>
             </ul>
             <p>
-              Sur Akwaba Immo, cette page sert de démonstration front-only :
-              l&apos;article est prêt pour une future connexion à une vraie base de
-              données, sans casser l&apos;interface actuelle.
+              Gardez aussi une copie des documents partagés, des rendez-vous et
+              des engagements pris. Ces traces simples évitent beaucoup de
+              conflits au moment de conclure.
             </p>
           </div>
         </div>

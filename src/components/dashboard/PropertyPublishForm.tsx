@@ -82,16 +82,13 @@ export function PropertyPublishForm() {
   return (
     <form onSubmit={submit} className="mx-auto max-w-[900px]">
       <div className="mb-6 rounded-2xl border border-line bg-white p-6 shadow-card">
-        <span className="rounded-md bg-brand-50 px-2.5 py-1 text-[11px] font-bold text-brand-500">
-          Front-only
-        </span>
         <h1 className="mt-4 text-2xl font-extrabold text-ink">
           {editId ? "Modifier le bien" : "Publier un bien"}
         </h1>
         <p className="mt-2 text-sm leading-relaxed text-muted">
           {editId
-            ? "Vos modifications sont enregistrées dans le navigateur pour la démo et se reflètent dans la recherche."
-            : "Cette annonce sera enregistrée dans le navigateur pour la démo. Elle apparaîtra ensuite dans la recherche sans backend."}
+            ? "Vos modifications se reflètent ensuite dans la recherche et dans votre tableau de bord."
+            : "Ajoutez les informations essentielles pour rendre votre annonce claire, vérifiable et exploitable."}
         </p>
       </div>
 

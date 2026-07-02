@@ -56,12 +56,17 @@ export async function generateMetadata({
 
 export default async function FichePage({
   params,
+  searchParams,
 }: {
   params: Promise<{ id: string }>;
+  searchParams?: Promise<{ from?: string }>;
 }) {
   const { id } = await params;
+  const query = searchParams ? await searchParams : {};
   const property = getProperty(id);
   if (!property) notFound();
+  const backHref =
+    query.from && query.from.startsWith("/recherche") ? query.from : "/recherche";
 
   const agent = getActor(property.agentId);
   const status = STATUS_INFO[property.status];
@@ -99,19 +104,12 @@ export default async function FichePage({
     { icon: ShieldCheck, bg: "#E6F4EC", color: "#1E7A4A", label: "Statut", value: status.label },
   ];
 
-  const galleryLabels = property.amenities?.slice(0, 3) ?? ["Vue", "Séjour", "Extérieur"];
-  const galleryGradients = [
-    "linear-gradient(160deg,#0d3d4a,#1c8a7c)",
-    "linear-gradient(130deg,#1a3d2a,#2a6a44)",
-    "linear-gradient(150deg,#2a2a4a,#4a4a7c)",
-  ];
-
   return (
     <div className="bg-surface-warm">
       {/* Breadcrumb */}
       <div className="flex h-12 items-center gap-2 overflow-x-auto border-b border-line bg-white px-6 text-[13px] sm:px-10 lg:px-14">
         <Link
-          href="/recherche"
+          href={backHref}
           className="flex shrink-0 items-center gap-1.5 font-medium text-brand-500 hover:text-brand-600"
         >
           <ArrowLeft className="size-3.5" />
@@ -164,36 +162,12 @@ export default async function FichePage({
               </div>
               <button className="absolute bottom-5 right-5 z-[2] flex items-center gap-1.5 rounded-[9px] border border-white/20 bg-black/50 px-3.5 py-2 text-[13px] font-semibold text-white hover:bg-black/70">
                 <Images className="size-3.5" />
-                12 photos
+                Photo principale
               </button>
               <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/60 to-transparent px-6 pb-4 pt-10">
                 <span className="text-[13px] text-white/70">
                   {property.neighborhood}, {property.city}, Cameroun
                 </span>
-              </div>
-            </div>
-            <div className="grid grid-cols-4 gap-[3px] bg-[#111] p-[3px]">
-              {galleryGradients.map((g, i) => (
-                <div
-                  key={i}
-                  className="relative h-20 overflow-hidden rounded"
-                  style={{ background: g }}
-                >
-                  <div className="absolute inset-0 flex items-end bg-gradient-to-t from-black/45 to-transparent p-2">
-                    <span className="text-[10px] font-medium text-white/85">
-                      {galleryLabels[i]}
-                    </span>
-                  </div>
-                </div>
-              ))}
-              <div
-                className="relative h-20 overflow-hidden rounded"
-                style={{ background: "linear-gradient(140deg,#3a2a1a,#6a4a2a)" }}
-              >
-                <div className="absolute inset-0 flex flex-col items-center justify-center gap-0.5 bg-black/50">
-                  <span className="text-xl font-bold text-white">+8</span>
-                  <span className="text-[10px] text-white/70">photos</span>
-                </div>
               </div>
             </div>
           </div>
@@ -364,9 +338,13 @@ export default async function FichePage({
               propertyId={property.id}
               propertyTitle={property.title}
               askingPrice={property.price}
+              transaction={property.transaction}
             />
             <p className="mt-3.5 text-center text-xs leading-relaxed text-[#C4C9D0]">
-              Réf. {property.id.toUpperCase()} · Sans commission acheteur
+              Réf. {property.id.toUpperCase()} ·{" "}
+              {property.transaction === "vente"
+                ? "Sans commission acheteur"
+                : "Sans commission locataire"}
             </p>
           </div>
 
@@ -420,11 +398,11 @@ export default async function FichePage({
               </div>
 
               <div className="flex gap-2">
-                <ContactButton>
+                <ContactButton href={`tel:${formatPhoneHref(agent.phone)}`}>
                   <Phone className="size-[15px]" />
                   Appeler
                 </ContactButton>
-                <ContactButton>
+                <ContactButton href={`sms:${formatPhoneHref(agent.phone)}`}>
                   <MessageSquare className="size-[15px]" />
                   Message
                 </ContactButton>
@@ -483,10 +461,23 @@ function AgentStat({ value, label }: { value: string; label: string }) {
   );
 }
 
-function ContactButton({ children }: { children: React.ReactNode }) {
+function ContactButton({
+  href,
+  children,
+}: {
+  href: string;
+  children: React.ReactNode;
+}) {
   return (
-    <button className="flex flex-1 items-center justify-center gap-1.5 rounded-[10px] border-[1.5px] border-line bg-surface-warm px-2 py-2.5 text-[13px] font-semibold text-ink transition-colors hover:border-brand-500 hover:text-brand-500">
+    <a
+      href={href}
+      className="flex flex-1 items-center justify-center gap-1.5 rounded-[10px] border-[1.5px] border-line bg-surface-warm px-2 py-2.5 text-[13px] font-semibold text-ink transition-colors hover:border-brand-500 hover:text-brand-500"
+    >
       {children}
-    </button>
+    </a>
   );
+}
+
+function formatPhoneHref(phone?: string) {
+  return (phone || "+237 699000000").replace(/[^\d+]/g, "");
 }

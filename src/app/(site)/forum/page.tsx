@@ -1,6 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { CheckCircle2, MessageCircle, PlusCircle } from "lucide-react";
+import { CheckCircle2, MessageCircle } from "lucide-react";
+import {
+  ForumQuestionComposer,
+  LocalForumQuestions,
+} from "@/components/forum/ForumQuestionComposer";
 import { forumQuestions, getFiliere } from "@/lib/mock/learning";
 
 export const metadata: Metadata = {
@@ -24,17 +28,12 @@ export default function ForumPage() {
               solutions partagées par la communauté.
             </p>
           </div>
-          <Link
-            href="/inscription"
-            className="inline-flex items-center gap-2 rounded-xl bg-gold-400 px-5 py-3 text-sm font-bold text-white"
-          >
-            <PlusCircle className="size-4" />
-            Poser une question
-          </Link>
+          <ForumQuestionComposer />
         </div>
       </section>
 
       <section className="mx-auto max-w-[1000px] space-y-4 px-6 py-10 sm:px-10">
+        <LocalForumQuestions />
         {forumQuestions.map((question) => {
           const filiere = getFiliere(question.filiere);
           return (

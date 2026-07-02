@@ -26,7 +26,11 @@ export function LoginForm() {
     }
     setError("");
     saveDemoUser(user);
-    router.push(dashboardPathForRole(user.role));
+    const next =
+      typeof window !== "undefined"
+        ? new URLSearchParams(window.location.search).get("next")
+        : null;
+    router.push(next && next.startsWith("/") ? next : dashboardPathForRole(user.role));
   }
 
   return (

@@ -1,20 +1,32 @@
 "use client";
 
 import { useState } from "react";
+import { createPortal } from "react-dom";
+import { useRouter } from "next/navigation";
 import { CheckCircle2, Mail, X } from "lucide-react";
-import { saveOffer } from "@/lib/demo-store";
+import { readDemoUser, saveOffer } from "@/lib/demo-store";
+import type { Transaction } from "@/lib/types";
 
 export function MakeOfferButton({
   propertyId,
   propertyTitle,
   askingPrice,
+  transaction = "vente",
 }: {
   propertyId: string;
   propertyTitle: string;
   askingPrice: number;
+  transaction?: Transaction;
 }) {
+  const router = useRouter();
+  const isRental = transaction === "location";
+  const actionLabel = isRental ? "Proposer un dossier" : "Faire une offre";
+  const amountLabel = isRental ? "Loyer proposé" : "Montant proposé";
+  const sentLabel = isRental ? "Dossier envoyé !" : "Offre envoyée !";
+  const submitLabel = isRental ? "Envoyer la proposition" : "Envoyer l'offre";
   const [open, setOpen] = useState(false);
   const [sent, setSent] = useState(false);
+  const [blocked, setBlocked] = useState("");
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
@@ -24,6 +36,22 @@ export function MakeOfferButton({
   function close() {
     setOpen(false);
     window.setTimeout(() => setSent(false), 200);
+  }
+
+  function openForm() {
+    const user = readDemoUser();
+    if (!user) {
+      router.push(`/connexion?next=${encodeURIComponent(window.location.pathname)}`);
+      return;
+    }
+    if (user.role !== "acheteur" && user.role !== "locataire") {
+      setBlocked("Cette action est réservée au compte acheteur / locataire.");
+      return;
+    }
+    if (!name) setName(user.name);
+    if (!email) setEmail(user.email);
+    setBlocked("");
+    setOpen(true);
   }
 
   function submit(e: React.FormEvent) {
@@ -48,16 +76,25 @@ export function MakeOfferButton({
     <>
       <button
         type="button"
-        onClick={() => setOpen(true)}
+        onClick={openForm}
         className="flex w-full items-center justify-center gap-2.5 rounded-xl border-2 border-brand-500 py-[13px] text-[15px] font-bold text-brand-500 transition-colors hover:bg-brand-50"
       >
         <Mail className="size-[17px]" />
-        Faire une offre
+        {actionLabel}
       </button>
+      {blocked && (
+        <p className="mt-2.5 rounded-lg bg-surface-cool px-3 py-2 text-center text-xs font-medium text-muted">
+          {blocked}
+        </p>
+      )}
 
-      {open && (
+      {open &&
+        typeof document !== "undefined" &&
+        createPortal(
+          (
         <div
-          className="fixed inset-0 z-[2000] flex items-center justify-center bg-black/40 p-4"
+          className="fixed inset-0 z-[4000] flex items-center justify-center bg-black/40 p-4"
+          style={{ zIndex: 9999 }}
           onClick={close}
         >
           <div
@@ -67,7 +104,7 @@ export function MakeOfferButton({
             <div className="mb-4 flex items-start justify-between gap-4">
               <div>
                 <h2 className="text-lg font-extrabold text-ink">
-                  Faire une offre
+                  {actionLabel}
                 </h2>
                 <p className="mt-1 text-[13px] text-muted">{propertyTitle}</p>
               </div>
@@ -85,10 +122,10 @@ export function MakeOfferButton({
               <div className="py-6 text-center">
                 <CheckCircle2 className="mx-auto mb-3 size-12 text-success" />
                 <div className="text-base font-bold text-ink">
-                  Offre envoyée !
+                  {sentLabel}
                 </div>
                 <p className="mx-auto mt-1.5 max-w-[320px] text-sm text-muted">
-                  L&apos;agent la verra dans son tableau de bord et pourra la
+                  L&apos;agent le verra dans son tableau de bord et pourra le
                   traiter avec les autres demandes.
                 </p>
                 <button
@@ -134,14 +171,14 @@ export function MakeOfferButton({
                     placeholder="vous@exemple.com"
                   />
                 </Field>
-                <Field label="Montant proposé">
+                <Field label={amountLabel}>
                   <input
                     className={inputClass}
                     value={amount}
                     onChange={(e) => setAmount(e.target.value)}
                     placeholder={`${new Intl.NumberFormat("fr-FR").format(
                       askingPrice,
-                    )} FCFA`}
+                    )} FCFA${isRental ? " / mois" : ""}`}
                     inputMode="numeric"
                     required
                   />
@@ -151,20 +188,26 @@ export function MakeOfferButton({
                     className={`${inputClass} min-h-20 resize-y`}
                     value={message}
                     onChange={(e) => setMessage(e.target.value)}
-                    placeholder="Conditions, délai, mode de paiement..."
+                    placeholder={
+                      isRental
+                        ? "Situation, date d'entrée, garanties proposées..."
+                        : "Conditions, délai, mode de paiement..."
+                    }
                   />
                 </Field>
                 <button
                   type="submit"
                   className="mt-1 w-full rounded-xl bg-gold-400 py-3 text-sm font-bold text-white shadow-[0_4px_14px_rgba(224,163,62,0.28)] hover:bg-gold-500"
                 >
-                  Envoyer l&apos;offre
+                  {submitLabel}
                 </button>
               </form>
             )}
           </div>
         </div>
-      )}
+          ),
+          document.body,
+        )}
     </>
   );
 }

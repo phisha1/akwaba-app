@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import dynamic from "next/dynamic";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { ChevronDown, MapPin, MapIcon, List } from "lucide-react";
 import { properties } from "@/lib/mock/properties";
 import { getAllProperties } from "@/lib/demo-store";
@@ -34,8 +34,10 @@ const TYPES = [
   "Chambre",
 ];
 const RADII = [5, 10, 20, 50];
+type SortMode = "distance" | "priceAsc" | "priceDesc" | "recent";
 
 export function SearchView() {
+  const router = useRouter();
   const params = useSearchParams();
   const paramsKey = params.toString();
 
@@ -49,6 +51,7 @@ export function SearchView() {
   const [mobileMap, setMobileMap] = useState(false);
   const [priceMin, setPriceMin] = useState<number | undefined>(undefined);
   const [priceMax, setPriceMax] = useState<number | undefined>(undefined);
+  const [sort, setSort] = useState<SortMode>("distance");
   const [allProperties, setAllProperties] = useState<Property[]>(properties);
 
   useEffect(() => {
@@ -84,8 +87,42 @@ export function SearchView() {
     [allProperties, transaction, ville, type, radiusKm, priceMin, priceMax],
   );
 
+  const sortedResults = useMemo(() => {
+    const next = [...results];
+    if (sort === "priceAsc") {
+      next.sort((a, b) => a.property.price - b.property.price);
+    } else if (sort === "priceDesc") {
+      next.sort((a, b) => b.property.price - a.property.price);
+    } else if (sort === "recent") {
+      next.sort(
+        (a, b) =>
+          new Date(b.property.createdAt).getTime() -
+          new Date(a.property.createdAt).getTime(),
+      );
+    } else {
+      next.sort((a, b) => (a.distanceKm ?? 0) - (b.distanceKm ?? 0));
+    }
+    return next;
+  }, [results, sort]);
+
+  function updateTransaction(nextTransaction: Transaction) {
+    setTransaction(nextTransaction);
+    const next = new URLSearchParams(paramsKey);
+    next.set("transaction", nextTransaction);
+    router.replace(`/recherche?${next.toString()}`);
+    window.dispatchEvent(
+      new CustomEvent("akwaba:transaction-change", {
+        detail: { transaction: nextTransaction },
+      }),
+    );
+  }
+
   const center = CITY_CENTERS[ville] ?? CITY_CENTERS.Yaoundé;
-  const mapProperties = useMemo(() => results.map((r) => r.property), [results]);
+  const mapProperties = useMemo(
+    () => sortedResults.map((r) => r.property),
+    [sortedResults],
+  );
+  const returnHref = paramsKey ? `/recherche?${paramsKey}` : "/recherche";
 
   return (
     <div className="flex h-full flex-col">
@@ -107,7 +144,7 @@ export function SearchView() {
             <button
               key={t}
               type="button"
-              onClick={() => setTransaction(t)}
+              onClick={() => updateTransaction(t)}
               className={`px-3.5 py-1.5 text-[13px] font-semibold capitalize transition-colors ${
                 transaction === t
                   ? "bg-brand-500 text-white"
@@ -159,10 +196,10 @@ export function SearchView() {
 
         <div className="flex-1" />
         <span className="shrink-0 whitespace-nowrap text-[13px] font-medium text-muted">
-          {results.length} bien{results.length > 1 ? "s" : ""} trouvé
-          {results.length > 1 ? "s" : ""}
+          {sortedResults.length} bien{sortedResults.length > 1 ? "s" : ""} trouvé
+          {sortedResults.length > 1 ? "s" : ""}
         </span>
-        <FilterButton label="Trier : distance" className="hidden sm:flex" />
+        <SortSelect value={sort} onChange={setSort} />
       </div>
 
       {/* List + map */}
@@ -172,13 +209,13 @@ export function SearchView() {
             mobileMap ? "hidden lg:flex" : "flex"
           }`}
         >
-          {results.length === 0 ? (
+          {sortedResults.length === 0 ? (
             <div className="grid flex-1 place-items-center px-6 text-center text-sm text-muted">
               Aucun bien ne correspond à ces critères. Élargissez le rayon ou
               changez de ville.
             </div>
           ) : (
-            results.map(({ property, distanceKm }) => (
+            sortedResults.map(({ property, distanceKm }) => (
               <CompactPropertyCard
                 key={property.id}
                 property={property}
@@ -186,6 +223,7 @@ export function SearchView() {
                 active={activeId === property.id}
                 onActivate={() => setActiveId(property.id)}
                 onDeactivate={() => setActiveId(null)}
+                returnHref={returnHref}
               />
             ))
           )}
@@ -234,21 +272,27 @@ function Divider() {
   return <div className="h-5 w-px shrink-0 bg-line" />;
 }
 
-function FilterButton({
-  label,
-  className = "",
+function SortSelect({
+  value,
+  onChange,
 }: {
-  label: string;
-  className?: string;
+  value: SortMode;
+  onChange: (value: SortMode) => void;
 }) {
   return (
-    <button
-      type="button"
-      className={`flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-lg border-[1.5px] border-line bg-white px-3.5 py-1.5 text-[13px] font-medium text-ink transition-colors hover:border-brand-500 hover:text-brand-500 ${className}`}
-    >
-      {label}
+    <div className="hidden shrink-0 items-center gap-1.5 whitespace-nowrap rounded-lg border-[1.5px] border-line bg-white px-3.5 py-1.5 text-[13px] font-medium text-ink transition-colors hover:border-brand-500 sm:flex">
+      <select
+        value={value}
+        onChange={(e) => onChange(e.target.value as SortMode)}
+        className="cursor-pointer appearance-none bg-transparent pr-1 outline-none"
+      >
+        <option value="distance">Tri : distance</option>
+        <option value="priceAsc">Prix croissant</option>
+        <option value="priceDesc">Prix décroissant</option>
+        <option value="recent">Plus récents</option>
+      </select>
       <ChevronDown className="size-3" />
-    </button>
+    </div>
   );
 }
 
@@ -268,7 +312,7 @@ function PriceFilter({
         active ? "border-brand-500 bg-brand-50 text-brand-500" : "border-line bg-white text-ink"
       }`}
     >
-      <span className={active ? "text-brand-500" : "text-muted"}>Prix</span>
+      <span className={active ? "text-brand-500" : "text-muted"}>Prix FCFA</span>
       <input
         type="number"
         min="0"
@@ -276,7 +320,7 @@ function PriceFilter({
         placeholder="min"
         value={min ?? ""}
         onChange={(e) => onChange(e.target.value ? Number(e.target.value) : undefined, max)}
-        className="w-[68px] bg-transparent outline-none placeholder:text-faint"
+        className="w-[74px] bg-transparent outline-none placeholder:text-faint"
       />
       <span className="text-line-cool">–</span>
       <input
@@ -286,7 +330,7 @@ function PriceFilter({
         placeholder="max"
         value={max ?? ""}
         onChange={(e) => onChange(min, e.target.value ? Number(e.target.value) : undefined)}
-        className="w-[68px] bg-transparent outline-none placeholder:text-faint"
+        className="w-[74px] bg-transparent outline-none placeholder:text-faint"
       />
     </div>
   );

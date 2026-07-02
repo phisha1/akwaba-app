@@ -4,7 +4,7 @@ import { SearchBar } from "./SearchBar";
 const STATS = [
   { value: "2 400+", label: "biens actifs" },
   { value: "12", label: "villes couvertes" },
-  { value: "850+", label: "agents certifiés" },
+  { value: "12", label: "acteurs référencés" },
 ];
 
 export function Hero() {
@@ -13,7 +13,7 @@ export function Hero() {
       <div
         className="absolute inset-0 bg-cover bg-center"
         style={{
-          backgroundImage: "url('/images/cameroun-transport-routier.jpg')",
+          backgroundImage: "url('/images/villa-avec-piscine.jpg')",
         }}
       />
       <div className="absolute inset-0 bg-gradient-to-br from-brand-900/90 via-brand-500/78 to-brand-900/70" />

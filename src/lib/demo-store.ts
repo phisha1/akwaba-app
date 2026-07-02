@@ -12,6 +12,7 @@ import { properties as mockProperties } from "@/lib/mock/properties";
 
 export type DemoRole =
   | "acheteur"
+  | "locataire"
   | "particulier"
   | "expert"
   | "agent"
@@ -40,6 +41,7 @@ const PROPERTIES_KEY = "akwaba-demo-properties";
 
 export const ROLE_DASHBOARD_PATH: Record<DemoRole, string> = {
   acheteur: "/tableau-de-bord/acheteur",
+  locataire: "/tableau-de-bord/acheteur",
   particulier: "/tableau-de-bord",
   expert: "/tableau-de-bord/expert",
   agent: "/tableau-de-bord",
@@ -48,6 +50,7 @@ export const ROLE_DASHBOARD_PATH: Record<DemoRole, string> = {
 
 export const ROLE_LABEL: Record<DemoRole, string> = {
   acheteur: "Je cherche un bien",
+  locataire: "Je cherche à louer",
   particulier: "Je publie mon bien",
   expert: "Expert / Formateur",
   agent: "Agent / Propriétaire",
@@ -82,7 +85,7 @@ export function clearDemoUser() {
   window.localStorage.removeItem(USER_KEY);
 }
 
-/* ── Comptes de démonstration (auth front-only) ──────────────── */
+/* ── Comptes de démonstration ──────────────── */
 
 export interface DemoAccount extends DemoUser {
   password: string;
@@ -93,6 +96,7 @@ const ACCOUNTS_KEY = "akwaba-accounts";
 /** Comptes fournis pour la démo — permettent de se connecter sans s'inscrire. */
 const SEED_ACCOUNTS: DemoAccount[] = [
   { name: "Client Démo", email: "acheteur@akwaba.cm", password: "akwaba123", role: "acheteur" },
+  { name: "Locataire Démo", email: "locataire@akwaba.cm", password: "akwaba123", role: "locataire" },
   { name: "Awa Bello", email: "bailleur@akwaba.cm", password: "akwaba123", role: "particulier" },
   { name: "Sonia Expert", email: "expert@akwaba.cm", password: "akwaba123", role: "expert" },
   { name: "Jean-Pierre Mbida", email: "agent@akwaba.cm", password: "akwaba123", role: "agent" },
@@ -177,7 +181,7 @@ export function saveStoredProperty(draft: PropertyDraft): Property {
     featured: false,
     agentId: "act-001",
     description: draft.description,
-    amenities: ["Publié depuis la démo", "À vérifier", "Contact agent"],
+    amenities: ["Publié par le propriétaire", "À vérifier", "Contact agent"],
     createdAt: new Date().toISOString().slice(0, 10),
   };
   const next = [saved, ...readStoredProperties()];

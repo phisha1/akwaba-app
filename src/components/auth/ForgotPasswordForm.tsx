@@ -40,7 +40,7 @@ export function ForgotPasswordForm() {
       {sent && (
         <div className="mt-4 flex items-start gap-2 rounded-[10px] border border-success bg-success-bg px-3.5 py-3 text-[13px] font-medium text-success">
           <CheckCircle2 className="mt-0.5 size-4 shrink-0" />
-          Lien de recuperation simule envoye a {email}.
+          Si un compte existe pour {email}, les instructions de récupération ont été envoyées.
         </div>
       )}
     </>

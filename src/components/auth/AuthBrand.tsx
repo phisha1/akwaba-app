@@ -87,7 +87,7 @@ function FloatingCard({
 
 const FEATURES = [
   "Inscription 100% gratuite",
-  "Biens vérifiés, agents certifiés",
+  "Biens vérifiés, acteurs référencés",
   "Gérez vos biens et vos offres",
 ];
 

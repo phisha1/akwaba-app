@@ -23,10 +23,10 @@ const COLUMNS = [
   {
     title: "Akwaba Immo",
     links: [
-      { href: "#", label: "À propos" },
-      { href: "/annuaire", label: "Nos agents" },
-      { href: "#", label: "Blog" },
-      { href: "#", label: "Contact" },
+      { href: "/a-propos", label: "À propos" },
+      { href: "/annuaire", label: "Annuaire des acteurs" },
+      { href: "/articles", label: "Blog" },
+      { href: "/contact", label: "Contact" },
     ],
   },
 ];
@@ -77,7 +77,15 @@ export function Footer() {
 
         <div className="flex flex-col gap-3 border-t border-white/10 pt-6 text-sm text-white/40 sm:flex-row sm:items-center sm:justify-between">
           <span>© {new Date().getFullYear()} Akwaba Immo · Tous droits réservés</span>
-          <span>Fait au 🇨🇲 Cameroun</span>
+          <div className="flex flex-wrap items-center gap-3">
+            <Link href="/conditions-generales" className="hover:text-white">
+              CGU
+            </Link>
+            <Link href="/confidentialite" className="hover:text-white">
+              Confidentialité
+            </Link>
+            <span>Fait au 🇨🇲 Cameroun</span>
+          </div>
         </div>
       </div>
     </footer>

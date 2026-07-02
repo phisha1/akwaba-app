@@ -49,6 +49,17 @@ export function Header() {
     return () => window.clearTimeout(id);
   }, [pathname]);
 
+  useEffect(() => {
+    function onTransactionChange(event: Event) {
+      const detail = (event as CustomEvent<{ transaction?: string }>).detail;
+      setNavTransaction(detail?.transaction === "location" ? "location" : "vente");
+    }
+
+    window.addEventListener("akwaba:transaction-change", onTransactionChange);
+    return () =>
+      window.removeEventListener("akwaba:transaction-change", onTransactionChange);
+  }, []);
+
   // Close menus when the route changes.
   useEffect(() => {
     const id = window.setTimeout(() => {
@@ -76,6 +87,9 @@ export function Header() {
     router.push("/");
   }
 
+  const showAcademy = true;
+  const academyItems = user ? NAV_ACADEMY : [];
+
   return (
     <header className="sticky top-0 z-50 border-b border-line bg-white/95 backdrop-blur">
       <div className="mx-auto flex h-16 w-full max-w-[1440px] items-center justify-between px-4 sm:px-10 md:h-[70px] lg:px-14">
@@ -98,48 +112,54 @@ export function Header() {
               </Link>
             ))}
 
-            <span className="h-4 w-px bg-line" />
+            {showAcademy && (
+              <>
+                <span className="h-4 w-px bg-line" />
 
-            <div className="relative flex items-center gap-1.5" ref={acadRef}>
-              <Link
-                href="/academie"
-                className={`flex items-center gap-1.5 text-sm font-medium transition-colors ${
-                  pathname === "/academie"
-                    ? "text-brand-500"
-                    : "text-ink hover:text-brand-500"
-                }`}
-              >
-                <GraduationCap className="size-4 text-brand-500" />
-                Académie
-              </Link>
-              <button
-                type="button"
-                onClick={() => setAcad((v) => !v)}
-                aria-label="Ouvrir le menu Académie"
-                aria-expanded={acad}
-                className="grid size-7 place-items-center rounded-md text-faint transition-colors hover:bg-surface-warm hover:text-brand-500"
-              >
-                <ChevronDown
-                  className={`size-3.5 text-faint transition-transform ${acad ? "rotate-180" : ""}`}
-                />
-              </button>
-              {acad && (
-                <div className="absolute left-0 top-full mt-2 w-52 overflow-hidden rounded-xl border border-line bg-white py-1 shadow-pop">
-                  <div className="px-4 pb-1 pt-2 text-[10px] font-bold uppercase tracking-wide text-faint">
-                    Se former & échanger
-                  </div>
-                  {NAV_ACADEMY.map((item) => (
-                    <Link
-                      key={item.label}
-                      href={item.href}
-                      className="block px-4 py-2.5 text-sm text-ink transition-colors hover:bg-surface-warm hover:text-brand-500"
+                <div className="relative flex items-center gap-1.5" ref={acadRef}>
+                  <Link
+                    href="/academie"
+                    className={`flex items-center gap-1.5 text-sm font-medium transition-colors ${
+                      pathname === "/academie"
+                        ? "text-brand-500"
+                        : "text-ink hover:text-brand-500"
+                    }`}
+                  >
+                    <GraduationCap className="size-4 text-brand-500" />
+                    Académie
+                  </Link>
+                  {academyItems.length > 0 && (
+                    <button
+                      type="button"
+                      onClick={() => setAcad((v) => !v)}
+                      aria-label="Ouvrir le menu Académie"
+                      aria-expanded={acad}
+                      className="grid size-7 place-items-center rounded-md text-faint transition-colors hover:bg-surface-warm hover:text-brand-500"
                     >
-                      {item.label}
-                    </Link>
-                  ))}
+                      <ChevronDown
+                        className={`size-3.5 text-faint transition-transform ${acad ? "rotate-180" : ""}`}
+                      />
+                    </button>
+                  )}
+                  {acad && (
+                    <div className="absolute left-0 top-full mt-2 w-52 overflow-hidden rounded-xl border border-line bg-white py-1 shadow-pop">
+                      <div className="px-4 pb-1 pt-2 text-[10px] font-bold uppercase tracking-wide text-faint">
+                        Se former & échanger
+                      </div>
+                      {academyItems.map((item) => (
+                        <Link
+                          key={item.label}
+                          href={item.href}
+                          className="block px-4 py-2.5 text-sm text-ink transition-colors hover:bg-surface-warm hover:text-brand-500"
+                        >
+                          {item.label}
+                        </Link>
+                      ))}
+                    </div>
+                  )}
                 </div>
-              )}
-            </div>
+              </>
+            )}
           </nav>
         </div>
 
@@ -217,15 +237,19 @@ export function Header() {
             </MobileLink>
           ))}
 
-          <Section label="Académie" />
-          <MobileLink href="/academie" onClick={() => setOpen(false)}>
-            Accueil Académie
-          </MobileLink>
-          {NAV_ACADEMY.map((item) => (
-            <MobileLink key={item.label} href={item.href} onClick={() => setOpen(false)}>
-              {item.label}
-            </MobileLink>
-          ))}
+          {showAcademy && (
+            <>
+              <Section label="Académie" />
+              <MobileLink href="/academie" onClick={() => setOpen(false)}>
+                Accueil Académie
+              </MobileLink>
+              {academyItems.map((item) => (
+                <MobileLink key={item.label} href={item.href} onClick={() => setOpen(false)}>
+                  {item.label}
+                </MobileLink>
+              ))}
+            </>
+          )}
 
           <Section label="Compte" />
           {user ? (

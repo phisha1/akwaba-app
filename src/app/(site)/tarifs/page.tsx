@@ -28,8 +28,8 @@ const PLANS = [
     features: [
       "Articles premium",
       "Formations complètes",
-      "Messagerie avancée simulée",
-      "Certificats de formation simulés",
+      "Messagerie avancée",
+      "Certificats de formation",
     ],
     featured: true,
   },
@@ -40,12 +40,12 @@ export default function TarifsPage() {
     <div className="bg-surface-warm">
       <section className="border-b border-line bg-white px-6 py-10 text-center sm:px-10 lg:px-14">
         <p className="mb-2 text-xs font-bold uppercase text-gold-400">
-          Monétisation
+          Tarifs
         </p>
         <h1 className="text-3xl font-extrabold text-ink">Tarifs simples</h1>
         <p className="mx-auto mt-3 max-w-[680px] text-sm leading-relaxed text-muted">
-          Une base freemium claire pour présenter comment le projet peut devenir
-          vendable, même sans backend pour le moment.
+          Choisissez le niveau d&apos;accès qui correspond à votre usage : découvrir,
+          apprendre ou accélérer votre parcours immobilier.
         </p>
       </section>
 
@@ -77,7 +77,7 @@ export default function TarifsPage() {
               ))}
             </div>
             <Link
-              href="/inscription"
+              href={`/inscription?plan=${plan.name.toLowerCase()}`}
               className={`mt-7 flex w-full items-center justify-center rounded-xl py-3 text-sm font-bold ${
                 plan.featured
                   ? "bg-gold-400 text-white hover:bg-gold-500"

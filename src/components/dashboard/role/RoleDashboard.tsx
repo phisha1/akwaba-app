@@ -23,13 +23,23 @@ const CONFIG: Record<
   }
 > = {
   acheteur: {
-    title: "Dashboard acheteur / locataire",
-    desc: "Un espace simple pour suivre vos recherches, visites, favoris, articles utiles et questions.",
+    title: "Dashboard acheteur",
+    desc: "Un espace simple pour suivre vos recherches d'achat, vos offres, vos favoris, les articles utiles et vos questions.",
     actions: [
-      { href: "/recherche", label: "Chercher un bien", desc: "Achat, location et carte", icon: BookOpen },
+      { href: "/recherche?transaction=vente", label: "Acheter", desc: "Biens à vendre et carte", icon: BookOpen },
+      { href: "/tableau-de-bord/acheteur", label: "Mon espace", desc: "Favoris, visites et recherches", icon: CalendarCheck },
       { href: "/articles", label: "Conseils utiles", desc: "Guides pour éviter les pièges", icon: FileText },
       { href: "/forum", label: "Mes questions", desc: "Forum et réponses utiles", icon: MessageCircle },
-      { href: "/formations", label: "Apprendre", desc: "Formations courtes", icon: GraduationCap },
+    ],
+  },
+  locataire: {
+    title: "Dashboard locataire",
+    desc: "Un espace simple pour suivre vos recherches de location, vos visites, vos favoris, les articles utiles et vos questions.",
+    actions: [
+      { href: "/recherche?transaction=location", label: "Louer", desc: "Biens à louer et carte", icon: BookOpen },
+      { href: "/tableau-de-bord/acheteur", label: "Mes visites", desc: "Demandes et confirmations", icon: CalendarCheck },
+      { href: "/articles", label: "Conseils location", desc: "Éviter les pièges", icon: FileText },
+      { href: "/forum", label: "Mes questions", desc: "Forum et réponses utiles", icon: MessageCircle },
     ],
   },
   particulier: {
@@ -51,14 +61,14 @@ const CONFIG: Record<
       { href: "/tableau-de-bord/formations/nouveau", label: "Nouvelle formation", desc: "Modules, durée, prix", icon: GraduationCap },
       { href: "/forum", label: "Répondre au forum", desc: "Questions de la communauté", icon: MessageCircle },
       { href: "/formations", label: "Mes formations", desc: "Catalogue expert", icon: BookOpen },
-      { href: "/tableau-de-bord/expert", label: "Roadmap", desc: "Plan d'action simulé", icon: CalendarCheck },
+      { href: "/tableau-de-bord/expert", label: "Roadmap", desc: "Plan d'action expert", icon: CalendarCheck },
     ],
   },
   agent: {
     title: "Dashboard agent",
     desc: "Votre espace pour publier des biens, gérer les visites et suivre les offres.",
     actions: [
-      { href: "/tableau-de-bord/biens/nouveau", label: "Publier un bien", desc: "Créer une annonce front-only", icon: FileText },
+      { href: "/tableau-de-bord/biens/nouveau", label: "Publier un bien", desc: "Créer une annonce", icon: FileText },
       { href: "/tableau-de-bord", label: "Mes biens", desc: "Tableau agent actuel", icon: BookOpen },
       { href: "/recherche", label: "Voir la recherche", desc: "Contrôler la visibilité", icon: ShieldCheck },
       { href: "/annuaire", label: "Annuaire", desc: "Acteurs immobiliers", icon: Users },
@@ -66,9 +76,9 @@ const CONFIG: Record<
   },
   admin: {
     title: "Dashboard admin",
-    desc: "Un tableau de supervision simulé pour présenter la modération et les rôles.",
+    desc: "Un tableau de supervision pour suivre la modération et les rôles.",
     actions: [
-      { href: "/articles", label: "Modérer articles", desc: "Validation simulée", icon: FileText },
+      { href: "/articles", label: "Modérer articles", desc: "Validation éditoriale", icon: FileText },
       { href: "/forum", label: "Modérer forum", desc: "Questions et signalements", icon: MessageCircle },
       { href: "/tarifs", label: "Abonnements", desc: "Plans Free/Premium", icon: CalendarCheck },
       { href: "/filieres", label: "Configurer filières", desc: "Thèmes et cartographie", icon: BookOpen },

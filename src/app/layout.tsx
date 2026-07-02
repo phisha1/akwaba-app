@@ -15,7 +15,7 @@ export const metadata: Metadata = {
     template: "%s · Akwaba Immo",
   },
   description:
-    "Achetez, louez et vendez des biens immobiliers au Cameroun. Annonces vérifiées, agents certifiés et annuaire des acteurs de l'immobilier.",
+    "Achetez, louez et vendez des biens immobiliers au Cameroun. Annonces vérifiées, acteurs référencés et annuaire des professionnels de l'immobilier.",
 };
 
 export default function RootLayout({

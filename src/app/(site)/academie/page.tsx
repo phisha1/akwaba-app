@@ -7,9 +7,9 @@ import {
   GraduationCap,
   Layers,
   MessageCircle,
-  PenLine,
 } from "lucide-react";
 import { articles, filieres, formations, forumQuestions } from "@/lib/mock/learning";
+import { AcademyCreatorPanel } from "@/components/academy/AcademyCreatorPanel";
 
 export const metadata: Metadata = {
   title: "Académie",
@@ -172,42 +172,7 @@ export default function AcademiePage() {
           </div>
         </div>
 
-        <aside className="rounded-2xl border border-line bg-white p-6">
-          <span className="inline-flex items-center gap-2 rounded-md bg-brand-50 px-2.5 py-1 text-[11px] font-bold text-brand-500">
-            <PenLine className="size-3.5" />
-            Expert / formateur
-          </span>
-          <h2 className="mt-4 text-xl font-extrabold text-ink">
-            Créer et animer l&apos;Académie
-          </h2>
-          <p className="mt-2 text-sm leading-relaxed text-muted">
-            L&apos;expert dispose maintenant d&apos;une destination claire avant
-            de publier un article, préparer une formation ou répondre au forum.
-          </p>
-          <div className="mt-5 grid gap-3">
-            <Link
-              href="/tableau-de-bord/articles/nouveau"
-              className="flex items-center justify-between rounded-xl border border-line px-4 py-3 text-sm font-bold text-ink hover:border-brand-500 hover:text-brand-500"
-            >
-              Nouvel article
-              <ArrowRight className="size-4" />
-            </Link>
-            <Link
-              href="/tableau-de-bord/formations/nouveau"
-              className="flex items-center justify-between rounded-xl border border-line px-4 py-3 text-sm font-bold text-ink hover:border-brand-500 hover:text-brand-500"
-            >
-              Nouvelle formation
-              <ArrowRight className="size-4" />
-            </Link>
-            <Link
-              href="/forum"
-              className="flex items-center justify-between rounded-xl border border-line px-4 py-3 text-sm font-bold text-ink hover:border-brand-500 hover:text-brand-500"
-            >
-              Répondre au forum
-              <ArrowRight className="size-4" />
-            </Link>
-          </div>
-        </aside>
+        <AcademyCreatorPanel />
       </section>
     </div>
   );

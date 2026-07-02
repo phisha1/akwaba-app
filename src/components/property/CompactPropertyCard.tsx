@@ -15,19 +15,24 @@ export function CompactPropertyCard({
   active = false,
   onActivate,
   onDeactivate,
+  returnHref,
 }: {
   property: Property;
   distanceKm?: number | null;
   active?: boolean;
   onActivate?: () => void;
   onDeactivate?: () => void;
+  returnHref?: string;
 }) {
   const status = STATUS_INFO[property.status];
   const verified = getVerification(property) === "verifie";
+  const href = returnHref
+    ? `/annonces/${property.id}?from=${encodeURIComponent(returnHref)}`
+    : `/annonces/${property.id}`;
 
   return (
     <Link
-      href={`/annonces/${property.id}`}
+      href={href}
       onMouseEnter={onActivate}
       onMouseLeave={onDeactivate}
       className={`flex overflow-hidden rounded-xl bg-white shadow-[0_1px_3px_rgba(0,0,0,0.06)] transition-all duration-200 hover:translate-x-[3px] hover:shadow-[0_4px_16px_rgba(14,77,92,0.12)] ${

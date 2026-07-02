@@ -90,14 +90,14 @@ export default async function FormationDetailPage({
               {formation.price}
             </div>
             <p className="mt-3 text-sm leading-relaxed text-muted">
-              Cette démo simule l&apos;inscription à une formation. Le paiement et
-              le suivi réel seront branchés plus tard si un backend est ajouté.
+              Continuez depuis l&apos;Académie pour comparer les formations et
+              choisir le prochain contenu à suivre.
             </p>
             <Link
-              href="/inscription"
+              href="/academie"
               className="mt-5 flex w-full items-center justify-center rounded-xl bg-gold-400 py-3 text-sm font-bold text-white hover:bg-gold-500"
             >
-              Commencer
+              Continuer dans l&apos;Académie
             </Link>
           </aside>
         </div>

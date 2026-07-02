@@ -29,15 +29,15 @@ export default function ForgotPasswordPage() {
           Mot de passe oublié
         </h1>
         <p className="mb-6 text-sm leading-relaxed text-muted">
-          Entrez votre adresse e-mail. Pour cette version front-only, le parcours
-          simule l&apos;envoi d&apos;un lien de récupération.
+          Entrez votre adresse e-mail. Si un compte existe, vous recevrez les
+          instructions de récupération.
         </p>
 
         <ForgotPasswordForm />
 
         <p className="mt-5 rounded-[10px] border border-line bg-surface-warm px-3.5 py-2.5 text-[12px] leading-relaxed text-muted">
-          Démo : si vous avez créé un compte, reconnectez-vous avec l&apos;e-mail
-          et le mot de passe saisis à l&apos;inscription.
+          Vous pouvez aussi revenir à la connexion si vous connaissez déjà votre
+          mot de passe.
         </p>
       </div>
     </AuthShell>

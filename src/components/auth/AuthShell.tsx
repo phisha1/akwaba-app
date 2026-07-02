@@ -2,7 +2,7 @@ import { Fragment } from "react";
 
 const STATS = [
   { value: "2 400+", label: "biens actifs" },
-  { value: "850+", label: "agents certifiés" },
+  { value: "12", label: "acteurs référencés" },
   { value: "12", label: "villes couvertes" },
 ];
 
@@ -22,7 +22,7 @@ export function AuthShell({
         className="relative hidden w-[560px] shrink-0 flex-col justify-between overflow-hidden bg-brand-900 bg-cover bg-center p-10 lg:flex"
         style={{
           backgroundImage:
-            "linear-gradient(160deg, rgba(5, 30, 41, 0.86) 0%, rgba(14, 77, 92, 0.7) 55%, rgba(5, 30, 41, 0.72) 100%), url('/images/cameroun-transport-routier.jpg')",
+            "linear-gradient(160deg, rgba(5, 30, 41, 0.86) 0%, rgba(14, 77, 92, 0.7) 55%, rgba(5, 30, 41, 0.72) 100%), url('/images/villa-avec-piscine.jpg')",
         }}
       >
         <span className="pointer-events-none absolute -right-20 -top-24 size-[340px] rounded-full bg-white/[0.05]" />

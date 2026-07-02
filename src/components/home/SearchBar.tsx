@@ -22,6 +22,13 @@ export function SearchBar() {
   const [ville, setVille] = useState("Yaoundé");
   const [type, setType] = useState("Tous les biens");
 
+  function updateTransaction(next: Transaction) {
+    setTransaction(next);
+    window.dispatchEvent(
+      new CustomEvent("akwaba:transaction-change", { detail: { transaction: next } }),
+    );
+  }
+
   function submit() {
     const params = new URLSearchParams({ transaction, ville });
     if (type !== "Tous les biens") params.set("type", type);
@@ -78,14 +85,14 @@ export function SearchBar() {
           <button
             key={t}
             type="button"
-            onClick={() => setTransaction(t)}
+            onClick={() => updateTransaction(t)}
             className={`h-full min-w-0 flex-1 rounded-[10px] px-2 py-2.5 text-sm font-bold capitalize transition-colors ${
               transaction === t
                 ? "bg-brand-500 text-white"
                 : "text-faint hover:text-ink"
             }`}
           >
-            {t}
+            {t === "vente" ? "Acheter" : "Louer"}
           </button>
         ))}
       </div>

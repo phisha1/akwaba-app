@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { User, Briefcase, Check, Eye, EyeOff, KeyRound } from "lucide-react";
+import { Home, KeyRound, Search, Check, Eye, EyeOff } from "lucide-react";
 import {
   dashboardPathForRole,
   registerAccount,
@@ -13,38 +13,32 @@ import {
 
 type Role = Extract<
   DemoRole,
-  "acheteur" | "particulier" | "expert" | "agent"
+  "acheteur" | "locataire" | "particulier"
 >;
 
 const ROLES: {
   value: Role;
-  icon: typeof User;
+  icon: typeof Search;
   title: string;
   desc: string;
 }[] = [
   {
     value: "acheteur",
-    icon: User,
-    title: "Je cherche un bien",
-    desc: "Je cherche un bien, je demande des visites et je lis les conseils.",
+    icon: Search,
+    title: "Je veux acheter",
+    desc: "Je consulte les biens à vendre et je peux faire une offre.",
+  },
+  {
+    value: "locataire",
+    icon: Home,
+    title: "Je veux louer",
+    desc: "Je consulte les biens à louer et je peux demander une visite.",
   },
   {
     value: "particulier",
     icon: KeyRound,
     title: "Je publie mon bien",
     desc: "Je publie mon propre bien à vendre ou à louer.",
-  },
-  {
-    value: "expert",
-    icon: Briefcase,
-    title: "Je suis expert / formateur",
-    desc: "Je crée des formations et réponds à la communauté.",
-  },
-  {
-    value: "agent",
-    icon: Briefcase,
-    title: "Je suis agent immobilier",
-    desc: "Je gère un portefeuille de biens (professionnel).",
   },
 ];
 
@@ -57,16 +51,37 @@ export function SignupForm() {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
   const [showPwd, setShowPwd] = useState(false);
   const [accepted, setAccepted] = useState(false);
+  const [error, setError] = useState("");
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    const name = `${firstName || "Utilisateur"} ${lastName}`.trim();
-    const cleanEmail = email.trim() || "demo@akwaba.cm";
+    const cleanFirstName = firstName.trim();
+    const cleanLastName = lastName.trim();
+    const cleanEmail = email.trim();
+    const cleanPhone = phone.trim();
+    const cleanPassword = password.trim();
+
+    if (!cleanFirstName || !cleanLastName || !cleanEmail || !cleanPhone || !cleanPassword) {
+      setError("Tous les champs doivent être remplis.");
+      return;
+    }
+    if (cleanPassword.length < 6) {
+      setError("Le mot de passe doit contenir au moins 6 caractères.");
+      return;
+    }
+    if (!/^[\d\s+().-]{8,}$/.test(cleanPhone)) {
+      setError("Entrez un numéro de téléphone valide.");
+      return;
+    }
+
+    setError("");
+    const name = `${cleanFirstName} ${cleanLastName}`;
     // Register the account so it can be used to log in afterwards.
-    registerAccount({ name, email: cleanEmail, password, role });
+    registerAccount({ name, email: cleanEmail, password: cleanPassword, role });
     saveDemoUser({ name, email: cleanEmail, role });
     router.push(dashboardPathForRole(role));
   }
@@ -81,7 +96,7 @@ export function SignupForm() {
       </p>
 
       {/* Role selector */}
-      <div className="mb-6 grid grid-cols-1 gap-3 sm:grid-cols-2">
+      <div className="mb-6 grid grid-cols-1 gap-3">
         {ROLES.map((r) => {
           const selected = role === r.value;
           return (
@@ -161,6 +176,8 @@ export function SignupForm() {
           </span>
           <input
             className="flex-1 bg-transparent text-sm text-ink outline-none"
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
             placeholder="6 99 45 23 17"
             autoComplete="tel"
             required
@@ -190,18 +207,9 @@ export function SignupForm() {
         </div>
       </Field>
 
-      {/* Agency — agents only */}
-      {role === "agent" && (
-        <div className="mb-5 rounded-[11px] border-[1.5px] border-dashed border-brand-500 bg-brand-50 p-4">
-          <div className="mb-2 text-[11px] font-semibold uppercase tracking-wide text-brand-500">
-            Pour les agents · Optionnel
-          </div>
-          <Field label="Nom de l'agence">
-            <input
-              className="w-full rounded-[9px] border-[1.5px] border-[#B8D4DC] bg-white px-3.5 py-2.5 text-sm text-ink outline-none focus:border-brand-500"
-              placeholder="Ex. Bastos Premium Realty"
-            />
-          </Field>
+      {error && (
+        <div className="mb-4 rounded-[10px] border border-[#FCA5A5] bg-[#FEF2F2] px-3.5 py-2.5 text-[13px] font-medium text-[#B91C1C]">
+          {error}
         </div>
       )}
 
@@ -220,11 +228,11 @@ export function SignupForm() {
         </span>
         <span className="text-[13px] leading-relaxed text-muted">
           J&apos;accepte les{" "}
-          <Link href="#" className="font-semibold text-brand-500 hover:underline">
+          <Link href="/conditions-generales" className="font-semibold text-brand-500 hover:underline">
             Conditions Générales
           </Link>{" "}
           et la{" "}
-          <Link href="#" className="font-semibold text-brand-500 hover:underline">
+          <Link href="/confidentialite" className="font-semibold text-brand-500 hover:underline">
             Politique de confidentialité
           </Link>{" "}
           d&apos;Akwaba Immo.

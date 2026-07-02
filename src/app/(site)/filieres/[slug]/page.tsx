@@ -64,11 +64,11 @@ export default async function FiliereDetailPage({
           </p>
           <div className="mt-6 flex flex-wrap gap-3">
             <Link
-              href="/cartographie"
+              href="/recherche"
               className="inline-flex items-center gap-2 rounded-xl bg-gold-400 px-4 py-2.5 text-sm font-bold text-white"
             >
               <MapPinned className="size-4" />
-              Voir la cartographie
+              Voir les biens sur la carte
             </Link>
             <Link
               href="/recherche"
