@@ -69,7 +69,7 @@ export function DashboardSidebar() {
             <div className="text-xs text-white/55">{roleLabel}</div>
           </div>
         </div>
-        {(user?.role === "agent" || user?.role === "expert") && (
+        {user?.role === "agent" && (
           <span className="inline-flex items-center gap-1.5 rounded-md bg-white/10 px-2.5 py-1">
             <ShieldCheck className="size-[11px] text-[#4DE8A0]" />
             <span className="text-[11px] font-semibold text-white/85">
