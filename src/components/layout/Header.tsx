@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { Menu, X, LogOut } from "lucide-react";
+import { Menu, X, LogOut, ChevronDown, GraduationCap } from "lucide-react";
 import { Logo } from "./Logo";
 import { initials } from "@/lib/utils";
 import {
@@ -14,12 +14,28 @@ import {
   type DemoUser,
 } from "@/lib/demo-store";
 
+// Pilier 1 — Immobilier (la place de marché)
+const NAV_MARKET = [
+  { href: "/recherche", label: "Acheter" },
+  { href: "/recherche?transaction=location", label: "Louer" },
+];
+
+// Pilier 2 — Académie (contenus & communauté)
+const NAV_ACADEMY = [
+  { href: "/articles", label: "Articles" },
+  { href: "/formations", label: "Formations" },
+  { href: "/filieres", label: "Filières" },
+  { href: "/forum", label: "Forum" },
+];
+
 export function Header() {
   const pathname = usePathname();
   const router = useRouter();
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(false); // menu mobile
+  const [acad, setAcad] = useState(false); // menu déroulant Académie (desktop)
   const [user, setUser] = useState<DemoUser | null>(null);
   const [ready, setReady] = useState(false);
+  const acadRef = useRef<HTMLDivElement>(null);
 
   // Re-read the session on every navigation so the header stays in sync.
   useEffect(() => {
@@ -27,9 +43,25 @@ export function Header() {
       setUser(readDemoUser());
       setReady(true);
     }, 0);
-
     return () => window.clearTimeout(id);
   }, [pathname]);
+
+  // Close menus when the route changes.
+  useEffect(() => {
+    setAcad(false);
+    setOpen(false);
+  }, [pathname]);
+
+  // Close the Académie dropdown on outside click.
+  useEffect(() => {
+    function onDown(e: MouseEvent) {
+      if (acadRef.current && !acadRef.current.contains(e.target as Node)) {
+        setAcad(false);
+      }
+    }
+    if (acad) document.addEventListener("mousedown", onDown);
+    return () => document.removeEventListener("mousedown", onDown);
+  }, [acad]);
 
   function logout() {
     clearDemoUser();
@@ -41,9 +73,60 @@ export function Header() {
   return (
     <header className="sticky top-0 z-50 border-b border-line bg-white/95 backdrop-blur">
       <div className="mx-auto flex h-16 w-full max-w-[1440px] items-center justify-between px-4 sm:px-10 md:h-[70px] lg:px-14">
-        <Logo />
+        {/* Left: logo + two-pillar nav */}
+        <div className="flex items-center gap-6 lg:gap-8">
+          <Logo />
+          <nav className="hidden items-center gap-5 md:flex">
+            {NAV_MARKET.map((item) => (
+              <Link
+                key={item.label}
+                href={item.href}
+                className={`text-sm font-medium transition-colors ${
+                  pathname === item.href.split("?")[0]
+                    ? "text-brand-500"
+                    : "text-ink hover:text-brand-500"
+                }`}
+              >
+                {item.label}
+              </Link>
+            ))}
 
-        {/* Desktop actions */}
+            <span className="h-4 w-px bg-line" />
+
+            <div className="relative" ref={acadRef}>
+              <button
+                type="button"
+                onClick={() => setAcad((v) => !v)}
+                aria-expanded={acad}
+                className="flex items-center gap-1.5 text-sm font-medium text-ink transition-colors hover:text-brand-500"
+              >
+                <GraduationCap className="size-4 text-brand-500" />
+                Académie
+                <ChevronDown
+                  className={`size-3.5 text-faint transition-transform ${acad ? "rotate-180" : ""}`}
+                />
+              </button>
+              {acad && (
+                <div className="absolute left-0 top-full mt-2 w-52 overflow-hidden rounded-xl border border-line bg-white py-1 shadow-pop">
+                  <div className="px-4 pb-1 pt-2 text-[10px] font-bold uppercase tracking-wide text-faint">
+                    Se former & échanger
+                  </div>
+                  {NAV_ACADEMY.map((item) => (
+                    <Link
+                      key={item.label}
+                      href={item.href}
+                      className="block px-4 py-2.5 text-sm text-ink transition-colors hover:bg-surface-warm hover:text-brand-500"
+                    >
+                      {item.label}
+                    </Link>
+                  ))}
+                </div>
+              )}
+            </div>
+          </nav>
+        </div>
+
+        {/* Right: auth actions (desktop) */}
         <div className="hidden min-h-[44px] items-center gap-3 md:flex">
           {!ready ? null : user ? (
             <>
@@ -93,7 +176,7 @@ export function Header() {
           )}
         </div>
 
-        {/* Mobile actions */}
+        {/* Mobile menu button */}
         <div className="flex items-center gap-1.5 md:hidden">
           <button
             type="button"
@@ -109,44 +192,83 @@ export function Header() {
 
       {/* Mobile menu panel */}
       {open && (
-        <nav className="flex flex-col border-t border-line bg-white px-4 pb-4 pt-1 md:hidden">
+        <nav className="flex flex-col border-t border-line bg-white px-4 pb-4 md:hidden">
+          <Section label="Immobilier" />
+          {NAV_MARKET.map((item) => (
+            <MobileLink key={item.label} href={item.href} onClick={() => setOpen(false)}>
+              {item.label}
+            </MobileLink>
+          ))}
+
+          <Section label="Académie" />
+          {NAV_ACADEMY.map((item) => (
+            <MobileLink key={item.label} href={item.href} onClick={() => setOpen(false)}>
+              {item.label}
+            </MobileLink>
+          ))}
+
+          <Section label="Compte" />
           {user ? (
-            <Link
-              href={dashboardPathForRole(user.role)}
-              onClick={() => setOpen(false)}
-              className="border-b border-line/60 py-3 text-sm font-semibold text-brand-500"
-            >
-              Mon espace ({user.name.split(" ")[0]})
-            </Link>
+            <>
+              <MobileLink
+                href={dashboardPathForRole(user.role)}
+                onClick={() => setOpen(false)}
+              >
+                Mon espace ({user.name.split(" ")[0]})
+              </MobileLink>
+              <button
+                type="button"
+                onClick={logout}
+                className="mt-4 flex items-center justify-center gap-2 rounded-lg border-[1.5px] border-line px-5 py-3 text-sm font-semibold text-muted"
+              >
+                <LogOut className="size-4" />
+                Se déconnecter
+              </button>
+            </>
           ) : (
-            <Link
-              href="/connexion"
-              onClick={() => setOpen(false)}
-              className="border-b border-line/60 py-3 text-sm font-medium text-brand-500"
-            >
-              Connexion
-            </Link>
-          )}
-          {user ? (
-            <button
-              type="button"
-              onClick={logout}
-              className="mt-4 flex items-center justify-center gap-2 rounded-lg border-[1.5px] border-line px-5 py-3 text-sm font-semibold text-muted"
-            >
-              <LogOut className="size-4" />
-              Se déconnecter
-            </button>
-          ) : (
-            <Link
-              href="/inscription"
-              onClick={() => setOpen(false)}
-              className="mt-4 rounded-lg bg-gold-400 px-5 py-3 text-center text-sm font-semibold text-white transition-colors hover:bg-gold-500"
-            >
-              S&apos;inscrire
-            </Link>
+            <>
+              <MobileLink href="/connexion" onClick={() => setOpen(false)}>
+                Se connecter
+              </MobileLink>
+              <Link
+                href="/inscription"
+                onClick={() => setOpen(false)}
+                className="mt-4 rounded-lg bg-gold-400 px-5 py-3 text-center text-sm font-semibold text-white transition-colors hover:bg-gold-500"
+              >
+                S&apos;inscrire
+              </Link>
+            </>
           )}
         </nav>
       )}
     </header>
+  );
+}
+
+function Section({ label }: { label: string }) {
+  return (
+    <div className="px-1 pb-1 pt-4 text-[11px] font-bold uppercase tracking-wide text-faint">
+      {label}
+    </div>
+  );
+}
+
+function MobileLink({
+  href,
+  onClick,
+  children,
+}: {
+  href: string;
+  onClick: () => void;
+  children: React.ReactNode;
+}) {
+  return (
+    <Link
+      href={href}
+      onClick={onClick}
+      className="border-b border-line/60 py-3 text-sm font-medium text-ink transition-colors hover:text-brand-500"
+    >
+      {children}
+    </Link>
   );
 }
