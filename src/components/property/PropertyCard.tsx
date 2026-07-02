@@ -1,10 +1,17 @@
 import Link from "next/link";
 import { MapPin } from "lucide-react";
 import type { Property } from "@/lib/types";
-import { STATUS_INFO, TRANSACTION_LABEL, formatPrice } from "@/lib/utils";
+import {
+  STATUS_INFO,
+  TRANSACTION_LABEL,
+  formatPrice,
+  getVerification,
+} from "@/lib/utils";
+import { VerificationBadge } from "@/components/property/VerificationBadge";
 
 export function PropertyCard({ property }: { property: Property }) {
   const status = STATUS_INFO[property.status];
+  const verified = getVerification(property) === "verifie";
 
   return (
     <Link
@@ -37,6 +44,12 @@ export function PropertyCard({ property }: { property: Property }) {
             {status.label}
           </span>
         </div>
+
+        {verified && (
+          <div className="absolute right-3.5 top-3.5 z-[2]">
+            <VerificationBadge status="verifie" className="shadow-sm" />
+          </div>
+        )}
 
         <div className="relative z-[2] w-full bg-gradient-to-t from-black/65 to-transparent px-4 py-3">
           <span className="text-lg font-extrabold text-white">

@@ -277,6 +277,7 @@ export type PropertyPatch = Partial<
     | "surface"
     | "description"
     | "status"
+    | "verification"
   >
 > & { deleted?: boolean };
 
@@ -304,6 +305,11 @@ export function patchProperty(id: string, patch: PropertyPatch) {
 
 export function setPropertyStatus(id: string, status: PropertyStatus) {
   patchProperty(id, { status });
+}
+
+/** Owner asks Akwaba to verify the listing (titre foncier, propriétaire…). */
+export function requestVerification(id: string) {
+  patchProperty(id, { verification: "en_cours" });
 }
 
 export function deleteStoredPropertyById(id: string) {

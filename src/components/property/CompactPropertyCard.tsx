@@ -1,7 +1,12 @@
 import Link from "next/link";
-import { MapPin } from "lucide-react";
+import { MapPin, ShieldCheck } from "lucide-react";
 import type { Property } from "@/lib/types";
-import { STATUS_INFO, TRANSACTION_LABEL, formatPrice } from "@/lib/utils";
+import {
+  STATUS_INFO,
+  TRANSACTION_LABEL,
+  formatPrice,
+  getVerification,
+} from "@/lib/utils";
 import { formatDistance } from "@/lib/geo";
 
 export function CompactPropertyCard({
@@ -18,6 +23,7 @@ export function CompactPropertyCard({
   onDeactivate?: () => void;
 }) {
   const status = STATUS_INFO[property.status];
+  const verified = getVerification(property) === "verifie";
 
   return (
     <Link
@@ -39,6 +45,12 @@ export function CompactPropertyCard({
         {!property.imageUrl && (
           <span className="pointer-events-none absolute -bottom-2 -right-2 select-none text-[72px] font-extrabold leading-none text-white/[0.09]">
             {property.letter}
+          </span>
+        )}
+        {verified && (
+          <span className="absolute bottom-2 left-2 z-[2] inline-flex items-center gap-0.5 rounded bg-[#E6F4EC] px-1.5 py-0.5 text-[9px] font-bold text-[#1E7A4A]">
+            <ShieldCheck className="size-2.5" />
+            Vérifié
           </span>
         )}
         <span className="absolute left-2 top-2 z-[2] rounded bg-brand-500 px-1.5 py-0.5 text-[10px] font-bold text-white">

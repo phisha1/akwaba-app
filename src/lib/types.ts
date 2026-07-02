@@ -7,6 +7,9 @@ export type Transaction = "vente" | "location";
 
 export type PropertyStatus = "publie" | "reserve" | "vendu" | "loue";
 
+/** Trust status of a listing — the core of the "biens vérifiés" promise. */
+export type VerificationStatus = "verifie" | "en_cours" | "non_verifie";
+
 export interface Property {
   id: string;
   title: string;
@@ -37,6 +40,8 @@ export interface Property {
   lat: number;
   lng: number;
   verified: boolean;
+  /** Explicit verification state; when absent it is derived from `verified`. */
+  verification?: VerificationStatus;
   featured?: boolean;
   agentId: string;
   description?: string;

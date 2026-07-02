@@ -13,6 +13,8 @@ import {
   LayoutGrid,
   Trees,
   ShieldCheck,
+  ShieldAlert,
+  Clock,
   Mail,
   Phone,
   MessageSquare,
@@ -27,6 +29,8 @@ import {
   pricePerM2,
   relativeDays,
   initials,
+  getVerification,
+  VERIFICATION_INFO,
 } from "@/lib/utils";
 import { CITY_CENTERS, haversineKm, formatDistance } from "@/lib/geo";
 import { DetailMapLoader } from "@/components/property/DetailMapLoader";
@@ -61,6 +65,20 @@ export default async function FichePage({
 
   const agent = getActor(property.agentId);
   const status = STATUS_INFO[property.status];
+  const verification = getVerification(property);
+  const vInfo = VERIFICATION_INFO[verification];
+  const vExplain = {
+    verifie: "Propriétaire et documents contrôlés par les équipes Akwaba.",
+    en_cours: "Nos équipes contrôlent actuellement les documents du bien.",
+    non_verifie:
+      "Ce bien n'a pas encore été vérifié. Exigez le titre foncier avant tout paiement.",
+  }[verification];
+  const VIcon =
+    verification === "verifie"
+      ? ShieldCheck
+      : verification === "en_cours"
+        ? Clock
+        : ShieldAlert;
   const transactionLong =
     property.transaction === "vente" ? "À la vente" : "À la location";
   const center = CITY_CENTERS[property.city];
@@ -284,6 +302,22 @@ export default async function FichePage({
 
         {/* RIGHT SIDEBAR */}
         <aside className="flex flex-col gap-4 lg:sticky lg:top-6">
+          {/* Trust / verification */}
+          <div
+            className="flex items-start gap-3 rounded-2xl border p-4"
+            style={{ borderColor: `${vInfo.color}33`, background: vInfo.bg }}
+          >
+            <VIcon className="mt-0.5 size-5 shrink-0" style={{ color: vInfo.color }} />
+            <div>
+              <div className="text-sm font-bold" style={{ color: vInfo.color }}>
+                {vInfo.label}
+              </div>
+              <p className="mt-1 text-[13px] leading-relaxed text-ink-soft">
+                {vExplain}
+              </p>
+            </div>
+          </div>
+
           {/* Price + CTA */}
           <div className="rounded-2xl bg-white p-7 shadow-[0_2px_8px_rgba(0,0,0,0.06),0_12px_32px_rgba(0,0,0,0.06)]">
             <div className="mb-1.5 text-[10px] font-bold uppercase tracking-wider text-faint">

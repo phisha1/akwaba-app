@@ -1,6 +1,12 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
-import type { ActorRole, PropertyStatus, Transaction } from "@/lib/types";
+import type {
+  ActorRole,
+  Property,
+  PropertyStatus,
+  Transaction,
+  VerificationStatus,
+} from "@/lib/types";
 
 /** Merge conditional class names and dedupe Tailwind utilities. */
 export function cn(...inputs: ClassValue[]) {
@@ -27,6 +33,35 @@ export const STATUS_INFO: Record<
   reserve: { label: "Réservé", bg: "#FEF3C7", color: "#B45309" },
   vendu: { label: "Vendu", bg: "#F3F4F6", color: "#6B7280" },
   loue: { label: "Loué", bg: "#F3F4F6", color: "#6B7280" },
+};
+
+/** Verification status of a listing, derived from `verification` or `verified`. */
+export function getVerification(property: Property): VerificationStatus {
+  return property.verification ?? (property.verified ? "verifie" : "non_verifie");
+}
+
+export const VERIFICATION_INFO: Record<
+  VerificationStatus,
+  { label: string; short: string; bg: string; color: string }
+> = {
+  verifie: {
+    label: "Bien vérifié par Akwaba",
+    short: "Vérifié",
+    bg: "#E6F4EC",
+    color: "#1E7A4A",
+  },
+  en_cours: {
+    label: "Vérification en cours",
+    short: "En cours",
+    bg: "#FEF3C7",
+    color: "#B45309",
+  },
+  non_verifie: {
+    label: "Non vérifié",
+    short: "Non vérifié",
+    bg: "#F3F4F6",
+    color: "#6B7280",
+  },
 };
 
 export const ROLE_LABEL: Record<ActorRole, string> = {

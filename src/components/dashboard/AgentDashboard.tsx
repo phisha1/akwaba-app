@@ -12,6 +12,7 @@ import {
   X,
   Pencil,
   Trash2,
+  ShieldCheck,
 } from "lucide-react";
 import type { Property, PropertyStatus, Visit } from "@/lib/types";
 import {
@@ -19,11 +20,13 @@ import {
   readVisits,
   setPropertyStatus,
   deleteStoredPropertyById,
+  requestVerification,
   setVisitStatus,
   readDemoUser,
 } from "@/lib/demo-store";
 import { currentUser, offers } from "@/lib/mock/dashboard";
-import { STATUS_INFO } from "@/lib/utils";
+import { STATUS_INFO, getVerification } from "@/lib/utils";
+import { VerificationBadge } from "@/components/property/VerificationBadge";
 import { RoleCapabilities } from "@/components/dashboard/RoleCapabilities";
 
 const STATUS_OPTIONS: { value: PropertyStatus; label: string }[] = [
@@ -86,6 +89,11 @@ export function AgentDashboard() {
       deleteStoredPropertyById(id);
       refresh();
     }
+  }
+
+  function handleVerify(id: string) {
+    requestVerification(id);
+    refresh();
   }
 
   function handleVisit(id: string, status: "confirmee" | "refusee") {
@@ -165,6 +173,7 @@ export function AgentDashboard() {
               </div>
               {biens.map((b) => {
                 const status = STATUS_INFO[b.status];
+                const verification = getVerification(b);
                 return (
                   <div
                     key={b.id}
@@ -175,6 +184,20 @@ export function AgentDashboard() {
                       <span className="min-w-0">
                         <span className="block truncate text-[13px] font-semibold text-ink">{b.title}</span>
                         <span className="block text-[11px] text-faint">{b.neighborhood}, {b.city}</span>
+                        <span className="mt-1 block">
+                          {verification === "non_verifie" ? (
+                            <button
+                              type="button"
+                              onClick={() => handleVerify(b.id)}
+                              className="inline-flex items-center gap-1 rounded-md bg-brand-50 px-1.5 py-0.5 text-[10px] font-bold text-brand-500 hover:bg-brand-100"
+                            >
+                              <ShieldCheck className="size-2.5" />
+                              Demander la vérification
+                            </button>
+                          ) : (
+                            <VerificationBadge status={verification} />
+                          )}
+                        </span>
                       </span>
                     </div>
                     <span className="text-[13px] text-ink-soft">{b.type}</span>
