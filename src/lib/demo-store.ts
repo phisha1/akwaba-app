@@ -343,6 +343,45 @@ export function myProperties(): Property[] {
   return getAllProperties().filter((p) => p.ownerId === "me");
 }
 
+/* ── Favoris (espace acheteur) ───────────────────────────────── */
+
+const FAVORITES_KEY = "akwaba-favorites";
+
+export function readFavorites(): string[] {
+  if (!canUseStorage()) return [];
+  try {
+    const raw = window.localStorage.getItem(FAVORITES_KEY);
+    return raw ? (JSON.parse(raw) as string[]) : [];
+  } catch {
+    return [];
+  }
+}
+
+export function isFavorite(id: string): boolean {
+  return readFavorites().includes(id);
+}
+
+/** Add or remove a listing from favourites; returns the new state. */
+export function toggleFavorite(id: string): boolean {
+  const list = readFavorites();
+  const next = list.includes(id)
+    ? list.filter((x) => x !== id)
+    : [id, ...list];
+  if (canUseStorage()) {
+    window.localStorage.setItem(FAVORITES_KEY, JSON.stringify(next));
+  }
+  return next.includes(id);
+}
+
+/** Favourited listings, resolved against the full catalogue. */
+export function favoriteProperties(): Property[] {
+  const ids = readFavorites();
+  const all = getAllProperties();
+  return ids
+    .map((id) => all.find((p) => p.id === id))
+    .filter((p): p is Property => Boolean(p));
+}
+
 /* ============================================================
    Visit requests (visitor → agent)
    ============================================================ */

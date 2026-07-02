@@ -4,7 +4,6 @@ import type { Metadata } from "next";
 import {
   ArrowLeft,
   MapPin,
-  Heart,
   Share2,
   Images,
   Home,
@@ -34,6 +33,7 @@ import {
 } from "@/lib/utils";
 import { CITY_CENTERS, haversineKm, formatDistance } from "@/lib/geo";
 import { DetailMapLoader } from "@/components/property/DetailMapLoader";
+import { FavoriteButton } from "@/components/property/FavoriteButton";
 import { RequestVisitButton } from "@/components/property/RequestVisitButton";
 
 export function generateStaticParams() {
@@ -154,9 +154,10 @@ export default async function FichePage({
                 </span>
               </div>
               <div className="absolute right-5 top-5 z-[2] flex gap-2">
-                <IconButton>
-                  <Heart className="size-[18px]" />
-                </IconButton>
+                <FavoriteButton
+                  propertyId={property.id}
+                  className="grid size-10 place-items-center rounded-[10px] border border-white/20 bg-black/35 text-white hover:bg-black/55"
+                />
                 <IconButton>
                   <Share2 className="size-[18px]" />
                 </IconButton>

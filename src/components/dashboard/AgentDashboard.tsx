@@ -23,6 +23,7 @@ import {
   requestVerification,
   setVisitStatus,
   readDemoUser,
+  type DemoRole,
 } from "@/lib/demo-store";
 import { currentUser, offers } from "@/lib/mock/dashboard";
 import { STATUS_INFO, getVerification } from "@/lib/utils";
@@ -52,6 +53,7 @@ export function AgentDashboard() {
   const [biens, setBiens] = useState<Property[]>([]);
   const [visits, setVisits] = useState<Visit[]>([]);
   const [userName, setUserName] = useState("Utilisateur Akwaba");
+  const [role, setRole] = useState<DemoRole>("agent");
 
   const refresh = useCallback(() => {
     setBiens(myProperties());
@@ -63,6 +65,7 @@ export function AgentDashboard() {
       refresh();
       const u = readDemoUser();
       if (u?.name) setUserName(u.name);
+      if (u?.role === "particulier" || u?.role === "agent") setRole(u.role);
     }, 0);
 
     return () => window.clearTimeout(id);
@@ -331,7 +334,7 @@ export function AgentDashboard() {
       </div>
 
       <div className="mt-5">
-        <RoleCapabilities role="agent" />
+        <RoleCapabilities role={role} />
       </div>
     </div>
   );

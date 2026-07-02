@@ -1,5 +1,5 @@
-import { RoleDashboard } from "@/components/dashboard/role/RoleDashboard";
+import { AcheteurDashboard } from "@/components/dashboard/AcheteurDashboard";
 
 export default function AcheteurDashboardPage() {
-  return <RoleDashboard role="acheteur" />;
+  return <AcheteurDashboard />;
 }
